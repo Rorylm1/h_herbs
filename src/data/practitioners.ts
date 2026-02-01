@@ -20,15 +20,29 @@ export type Review = {
   date: string;
 };
 
+/*
+  Certification = professional body memberships, accreditations,
+  insurance, DBS checks etc. These are trust signals for clients.
+  Separate from qualifications (degrees/diplomas they studied).
+*/
+export type Certification = {
+  body: string;        // e.g., "Association of Naturopathic Practitioners"
+  abbreviation: string; // e.g., "ANP"
+  type: string;        // e.g., "Registered Member", "Full Insurance"
+  year?: number;       // year obtained, if relevant
+};
+
 export type Practitioner = {
   slug: string;
   name: string;
   title: string;
   photo: string;
+  instagram: string;   // handle without @ (e.g., "hectorsherbs")
   specialities: string[];
   tagline: string;
   bio: string;
   qualifications: string[];
+  certifications: Certification[];
   approach: string;
   services: Service[];
   reviews: Review[];
@@ -41,13 +55,19 @@ export const practitioners: Practitioner[] = [
     name: "Hector",
     title: "Naturopathic Herbalist & Founder",
     photo: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop&crop=face",
+    instagram: "hectorsherbs",
     specialities: ["Digestive Health", "Chronic Fatigue", "Immune Support"],
     tagline: "Getting to the root cause of your symptoms through traditional herbal wisdom",
     bio: "As the founder of Hector's Herbs, I've dedicated my career to understanding the intricate connections between plants and human health. With over a decade of experience in naturopathic herbalism, I believe that the body has an innate ability to heal when given the right support.\n\nMy approach combines traditional herbal knowledge with modern nutritional science. I take the time to understand each client's unique health picture, looking beyond symptoms to find the underlying causes of imbalance.\n\nI'm particularly passionate about digestive health, as I believe a healthy gut is the foundation of overall wellbeing. Whether you're dealing with chronic fatigue, immune challenges, or digestive discomfort, I'm here to guide you on your path back to vitality.",
     qualifications: [
       "BSc (Hons) Herbal Medicine, University of Westminster",
-      "Member, Association of Naturopathic Practitioners (ANP)",
       "Diploma in Naturopathic Nutrition",
+    ],
+    certifications: [
+      { body: "Association of Naturopathic Practitioners", abbreviation: "ANP", type: "Registered Member", year: 2014 },
+      { body: "Complementary & Natural Healthcare Council", abbreviation: "CNHC", type: "Registered Practitioner", year: 2015 },
+      { body: "Professional Indemnity Insurance", abbreviation: "PLI", type: "Fully Insured" },
+      { body: "Disclosure and Barring Service", abbreviation: "DBS", type: "Enhanced Check" },
     ],
     approach:
       "I take a holistic, root-cause approach to health. Rather than simply addressing symptoms, I work with you to understand the underlying factors affecting your wellbeing. Together, we'll create a personalised herbal protocol tailored to your specific needs.",
@@ -101,13 +121,18 @@ export const practitioners: Practitioner[] = [
     name: "Amara Osei",
     title: "Herbalist & Nutritionist",
     photo: "https://images.unsplash.com/photo-1594824476967-48c8b964ac31?w=400&h=400&fit=crop&crop=face",
+    instagram: "amara.herbs",
     specialities: ["Women's Health", "Hormonal Balance", "Fertility"],
     tagline: "Supporting women's health naturally through every stage of life",
     bio: "I'm passionate about empowering women to take control of their health using the wisdom of herbal medicine. My practice focuses on the unique hormonal landscape of women's bodies, from menstrual health and fertility to menopause and beyond.\n\nWith a background in both herbalism and clinical nutrition, I take an integrative approach that addresses the whole person. I believe that when we work with the body's natural rhythms, profound healing becomes possible.\n\nEvery woman's journey is different, and I pride myself on creating truly personalised protocols that honour your individual needs and goals.",
     qualifications: [
       "BSc Herbal Medicine, Middlesex University",
       "Diploma in Nutritional Therapy",
-      "Member, Association of Naturopathic Practitioners (ANP)",
+    ],
+    certifications: [
+      { body: "Association of Naturopathic Practitioners", abbreviation: "ANP", type: "Registered Member", year: 2017 },
+      { body: "British Association for Nutrition & Lifestyle Medicine", abbreviation: "BANT", type: "Registered Nutritionist", year: 2018 },
+      { body: "Professional Indemnity Insurance", abbreviation: "PLI", type: "Fully Insured" },
     ],
     approach:
       "My practice is centred on women's health and hormonal wellbeing. I combine herbal medicine with nutritional therapy to create comprehensive protocols that support your body's natural balance.",
@@ -155,14 +180,20 @@ export const practitioners: Practitioner[] = [
     name: "Thomas Whitfield",
     title: "Medical Herbalist",
     photo: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=400&fit=crop&crop=face",
+    instagram: "thomas.herbalist",
     specialities: ["Respiratory Health", "Allergies", "Skin Conditions"],
     tagline: "Evidence-based herbal medicine for respiratory and skin health",
     bio: "With a strong foundation in both traditional herbalism and modern phytotherapy research, I specialise in conditions affecting the respiratory system and skin. These two systems are deeply connected, and I find that addressing one often brings improvements in the other.\n\nMy approach is evidence-based, drawing on the latest research in herbal medicine while respecting the centuries of traditional knowledge that underpin our practice. I believe in transparency and education — I want my clients to understand not just what they're taking, but why.\n\nWhether you're dealing with chronic allergies, eczema, asthma, or other respiratory or skin concerns, I'm here to help you find natural, effective solutions.",
     qualifications: [
       "MSc Herbal Medicine, University of East London",
       "BSc Biomedical Science",
-      "Member, National Institute of Medical Herbalists (NIMH)",
-      "Member, Association of Naturopathic Practitioners (ANP)",
+    ],
+    certifications: [
+      { body: "National Institute of Medical Herbalists", abbreviation: "NIMH", type: "Fellow Member", year: 2013 },
+      { body: "Association of Naturopathic Practitioners", abbreviation: "ANP", type: "Registered Member", year: 2014 },
+      { body: "Complementary & Natural Healthcare Council", abbreviation: "CNHC", type: "Registered Practitioner", year: 2014 },
+      { body: "Professional Indemnity Insurance", abbreviation: "PLI", type: "Fully Insured" },
+      { body: "Disclosure and Barring Service", abbreviation: "DBS", type: "Enhanced Check" },
     ],
     approach:
       "I combine traditional herbal wisdom with current scientific research. My protocols are evidence-based, carefully formulated, and clearly explained so you understand every step of your healing journey.",
@@ -203,13 +234,18 @@ export const practitioners: Practitioner[] = [
     name: "Priya Sharma",
     title: "Naturopath",
     photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop&crop=face",
+    instagram: "priya.naturopath",
     specialities: ["Stress & Anxiety", "Sleep Disorders", "Mental Wellbeing"],
     tagline: "Calming the mind and restoring balance through nature's remedies",
     bio: "In our fast-paced modern world, stress and sleep issues have become epidemic. My practice is dedicated to helping people find calm, restore their natural sleep patterns, and build resilience against the pressures of daily life.\n\nI draw on a wide range of naturopathic tools — from adaptogenic herbs and nervine tonics to breathing techniques and lifestyle medicine. I believe that true mental wellbeing comes from addressing the physical, emotional, and environmental factors that affect our nervous system.\n\nMy consulting room is a calm, safe space where you can share your concerns openly. Together, we'll build a plan that helps you not just cope, but truly thrive.",
     qualifications: [
       "Diploma in Naturopathic Medicine, College of Naturopathic Medicine",
       "Certificate in Mindfulness-Based Stress Reduction",
-      "Member, Association of Naturopathic Practitioners (ANP)",
+    ],
+    certifications: [
+      { body: "Association of Naturopathic Practitioners", abbreviation: "ANP", type: "Registered Member", year: 2019 },
+      { body: "General Naturopathic Council", abbreviation: "GNC", type: "Registered Naturopath", year: 2019 },
+      { body: "Professional Indemnity Insurance", abbreviation: "PLI", type: "Fully Insured" },
     ],
     approach:
       "I specialise in nervous system health, using calming herbs, adaptogens, and lifestyle strategies to help you manage stress, improve sleep, and find your natural equilibrium.",
@@ -257,6 +293,7 @@ export const practitioners: Practitioner[] = [
     name: "Elena Vasquez",
     title: "Herbalist",
     photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face",
+    instagram: "elena.herbalhealing",
     specialities: [
       "Pain Management",
       "Musculoskeletal Health",
@@ -267,7 +304,12 @@ export const practitioners: Practitioner[] = [
     qualifications: [
       "BSc (Hons) Herbal Medicine, Lincoln University",
       "Diploma in Sports Massage Therapy",
-      "Member, Association of Naturopathic Practitioners (ANP)",
+    ],
+    certifications: [
+      { body: "Association of Naturopathic Practitioners", abbreviation: "ANP", type: "Registered Member", year: 2020 },
+      { body: "Sports Massage Association", abbreviation: "SMA", type: "Full Member", year: 2016 },
+      { body: "Professional Indemnity Insurance", abbreviation: "PLI", type: "Fully Insured" },
+      { body: "Disclosure and Barring Service", abbreviation: "DBS", type: "Enhanced Check" },
     ],
     approach:
       "I combine internal herbal medicine with topical preparations and practical movement advice. My protocols address pain at its source, supporting the body's natural healing processes.",
