@@ -1,6 +1,6 @@
 # Hector's Herbs — V1 Prototype Spec
 
-> **Approach:** Simple clear navigation (A-style) with rich practitioner hub pages (B-style) and a hybrid homepage. Prototype only — all dummy data, no real backend.
+> **Approach:** Simple clear navigation (A-style) with rich practitioner hub pages (B-style) and a hybrid homepage. Prototype with real integrations where it matters (Stripe payments, Google Calendar) and dummy data elsewhere.
 
 ---
 
@@ -13,7 +13,7 @@
 | `/` | **Home** | Hero brand statement + pathway cards ("Book a Consultation", "Browse Our Herbs", "Learn") + featured practitioners (3 cards) + testimonials carousel + latest articles (3 cards) + newsletter CTA |
 | `/herbalists` | **Our Herbalists** | Directory grid of all practitioners. Each card: photo, name, title, specialities, short tagline, "View Profile" CTA |
 | `/herbalists/[slug]` | **Practitioner Profile** | **The hub page.** Full bio, qualifications, philosophy, specialities, services & pricing table, availability snapshot (mock calendar), client reviews, articles by this practitioner, "Book with [Name]" sticky CTA |
-| `/book` | **Book a Consultation** | Step 1: Select practitioner (if not pre-selected) → Step 2: Select service type → Step 3: Pick date & time (mock calendar) → Step 4: Your details (mock form) → Step 5: Confirmation. Visual stepper at top. |
+| `/book` | **Book a Consultation** | Step 1: Select practitioner (if not pre-selected) → Step 2: Select service type → Step 3: Pick date & time (mock calendar) → Step 4: Your details (mock form) → Step 5: Confirmation with "Add to Google Calendar" link for both client and practitioner. Visual stepper at top. |
 | `/shop` | **Herb Shop** | Product grid with sidebar filters: category (Tinctures, Teas, Capsules, Dried Herbs), concern tags. Each card: product image, name, short description, price, "Add to Basket" |
 | `/shop/[slug]` | **Product Detail** | Hero image, full description, ingredients, how to use, dosage, price, "Add to Basket", "Recommended by [Practitioner]" badge where applicable, related products |
 | `/learn` | **Learn** | Article grid with category filter tabs (Herbal Medicine, Nutrition, Holistic Living, Seasonal Wellness). Each card: featured image, title, author (practitioner), category tag, excerpt |
@@ -47,7 +47,8 @@
 
 | Route | Page | Description |
 |-------|------|-------------|
-| `/cart` | **Cart** | Line items, quantities, subtotal, "Proceed to Checkout" (leads to a mock checkout success page) |
+| `/cart` | **Cart** | Line items, quantities, subtotal, "Proceed to Checkout" button that creates a Stripe Checkout Session and redirects to Stripe's hosted payment page |
+| `/checkout/success` | **Checkout Success** | Post-payment confirmation page. Stripe redirects here after successful payment. Shows order summary and confirmation message. |
 | `/login` | **Login** | Mock login form with role selector: "Client" or "Practitioner". Clicking "Sign In" toggles to the appropriate logged-in state. |
 
 ---
@@ -267,7 +268,54 @@ type Prescription = {
 
 ---
 
-## 5. Milestones
+## 5. Integrations
+
+### Stripe (Shop Payments)
+
+**What:** Real payment processing for the herb shop using Stripe Checkout in test mode.
+
+**How it works:**
+1. Client clicks "Proceed to Checkout" on the cart page
+2. A Next.js API route (`/api/checkout`) creates a Stripe Checkout Session with the cart line items (using inline `price_data` — no need to pre-create products in Stripe)
+3. Client is redirected to Stripe's hosted checkout page (Stripe handles card form, validation, 3D Secure)
+4. On successful payment → Stripe redirects to `/checkout/success`
+5. On cancel → Stripe redirects back to `/cart`
+
+**Technical requirements:**
+- `stripe` npm package (server-side SDK)
+- `@stripe/stripe-js` package (client-side, for redirect to Checkout)
+- Stripe account with test mode API keys
+- Environment variables: `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- API route: `app/api/checkout/route.ts`
+- Success page: `app/checkout/success/page.tsx`
+
+**Test mode:** Stripe provides test card numbers (e.g., `4242 4242 4242 4242`, any future expiry, any CVC) so the full checkout flow works end-to-end without real payments. Ideal for prototyping and demos.
+
+**Architecture note:** This introduces the app's first server-side code via Next.js Route Handlers, which run as serverless functions on Vercel.
+
+### Google Calendar (Bookings)
+
+**What:** Calendar integration so practitioners and clients can track consultation appointments.
+
+**Phase 1 — "Add to Google Calendar" links (Milestone 3):**
+- When a booking is confirmed, the confirmation page displays "Add to Google Calendar" buttons
+- Generates a `calendar.google.com/calendar/event?action=TEMPLATE&...` URL pre-filled with: practitioner name, service type, date/time, client name, and booking details
+- Both client and practitioner can click to add the event to their personal Google Calendar
+- Zero API complexity — pure URL construction, no API keys or OAuth needed
+- Immediate value from day one
+
+**Phase 2 — Google Calendar API (Milestone 8):**
+- Practitioners connect their personal Google Calendar via OAuth in the practitioner portal
+- When a booking is confirmed, an event is automatically created in the practitioner's calendar
+- Availability page pulls real free/busy data from their connected calendar
+- Requires: Google Cloud project, OAuth2 consent screen, API routes, token storage (database), refresh token handling
+- Depends on Milestone 7 (database) for storing OAuth tokens
+
+**Rationale for two phases:** Phase 1 delivers real calendar functionality with zero infrastructure overhead — perfect for the V1 prototype. Phase 2 requires a database for OAuth token storage (Milestone 7), which is the natural transition point from prototype to production application.
+
+---
+
+## 6. Milestones
 
 ### Milestone 1: Foundation + Homepage
 - Next.js project setup (App Router, TypeScript, Tailwind)
@@ -286,14 +334,18 @@ type Prescription = {
 - Git commit + push. Vercel auto-deploys.
 - **Testable:** Browse practitioners, click into each profile, see full details. Links to booking flow exist but lead to placeholder.
 
-### Milestone 3: Booking Flow + Herb Shop
+### Milestone 3: Booking Flow + Herb Shop + Integrations
 - Multi-step booking flow (`/book`) with visual stepper
+- Booking confirmation includes "Add to Google Calendar" links (Phase 1 integration)
 - Shop grid page (`/shop`) with filter sidebar
 - Product detail page (`/shop/[slug]`)
-- Cart page (`/cart`) with mock checkout
+- Cart page (`/cart`) with Stripe Checkout integration (test mode)
+- Checkout success page (`/checkout/success`)
+- Stripe API route (`/api/checkout`) — first server-side code
+- Cart state via React Context, cart icon shows live count in header
 - 12 products with full dummy data
 - Git commit + push. Vercel auto-deploys.
-- **Testable:** Complete a full mock booking. Browse shop, add items to cart, view cart. Full simulated e-commerce experience.
+- **Testable:** Complete a full mock booking and see "Add to Google Calendar" link on confirmation. Browse shop, add items to cart, proceed to checkout via Stripe (use test card `4242 4242 4242 4242`), see success page. Real end-to-end e-commerce flow.
 
 ### Milestone 4: Learn + Contact
 - Learn hub page (`/learn`) with category tabs
@@ -323,3 +375,33 @@ type Prescription = {
 - Practitioner sidebar navigation
 - Git commit + push. Vercel auto-deploys.
 - **Testable:** Toggle to practitioner logged-in state. View practitioner dashboard, manage availability (toggle slots), browse appointments, write a prescription, edit profile, create an article draft. All visual/mock.
+
+### Milestone 7: Database, Auth & Image Storage (Post-V1)
+The transition from prototype to real application. This is the infrastructure foundation that everything beyond V1 depends on.
+
+- **Database:** Set up hosted Postgres (Vercel Postgres, Supabase, or Neon) with Prisma or Drizzle ORM
+- **Schema:** Migrate all dummy data into database tables — practitioners, products, articles, bookings, prescriptions, orders, users
+- **Auth:** Replace simulated auth toggle with real authentication via Auth.js (NextAuth.js) — email/password and/or Google sign-in, with role-based access (client vs practitioner)
+- **Image storage:** Set up Cloudinary, Vercel Blob, or AWS S3 for uploaded images (practitioner photos, product images, article featured images). `next/image` continues to handle frontend optimisation.
+- **Data migration:** Seed the database with existing dummy data so the transition is seamless
+- **API layer:** Replace direct TypeScript data imports with database queries (server components can query directly, client components via API routes)
+- Git commit + push. Vercel auto-deploys.
+- **Testable:** All existing pages work identically but are now backed by real database queries. Real login/signup works. Images can be uploaded and persisted. Data survives page refreshes and deploys.
+
+### Milestone 8: Google Calendar OAuth Integration (Post-V1)
+Full Google Calendar integration for practitioners. Requires Milestone 7 (database for token storage).
+
+- Set up Google Cloud project with Calendar API enabled and OAuth2 consent screen
+- Build OAuth flow: practitioner clicks "Connect Google Calendar" → Google consent screen → callback stores tokens in database
+- On booking confirmation: automatically create a Google Calendar event in the practitioner's connected calendar (no click needed)
+- Practitioner availability page pulls real free/busy data from their connected Google Calendar
+- Handle token refresh (access tokens expire, refresh tokens are long-lived)
+- Manage disconnection: practitioner can unlink their calendar
+- Git commit + push. Vercel auto-deploys.
+- **Testable:** Practitioner connects their Google Calendar in the portal. Client makes a booking. Event appears automatically in the practitioner's Google Calendar. Availability page shows real data.
+
+### Future Considerations
+- **Stripe Webhooks:** Listen for payment events (e.g., successful payment, refund) to update order status in real-time. Requires Milestone 7 database.
+- **Email Notifications:** Send booking confirmations and order receipts via email (e.g., Resend, SendGrid).
+- **Search:** Full-text search across products, articles, and practitioners.
+- **Analytics:** Track popular products, busiest practitioners, conversion rates.

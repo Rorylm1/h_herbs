@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Lato } from "next/font/google";
 import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import Providers from "@/components/Providers";
 
 /*
   FONT LOADING — next/font automatically optimises Google Fonts:
@@ -47,9 +48,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${cormorant.variable} ${lato.variable} antialiased`}>
-        <SiteHeader />
-        <main className="min-h-screen">{children}</main>
-        <SiteFooter />
+        <Providers>
+          <SiteHeader />
+          <main className="min-h-screen">{children}</main>
+          <SiteFooter />
+        </Providers>
       </body>
     </html>
   );

@@ -68,27 +68,107 @@
 
 ---
 
-# Milestone 3: Booking Flow + Herb Shop
+# Milestone 3: Booking Flow + Herb Shop + Integrations ✅
 
 ## Booking Flow
-- [ ] Build `BookingStepper` component — visual step indicator (1 of 5)
-- [ ] Build booking page step 1: Select practitioner (pre-filled if coming from profile)
-- [ ] Build booking page step 2: Select service type
-- [ ] Build booking page step 3: Pick date & time (mock calendar)
-- [ ] Build booking page step 4: Your details (mock form)
-- [ ] Build booking page step 5: Confirmation page
+- [x] Build `BookingStepper` component — visual step indicator (1 of 5)
+- [x] Build booking page step 1: Select practitioner (pre-filled if coming from profile)
+- [x] Build booking page step 2: Select service type
+- [x] Build booking page step 3: Pick date & time (mock calendar with real upcoming dates)
+- [x] Build booking page step 4: Your details (name, email, phone, notes form)
+- [x] Build booking page step 5: Confirmation page with "Add to Google Calendar" links
+
+## Google Calendar Integration (Phase 1)
+- [x] Build `AddToCalendarLink` component — generates Google Calendar event URL from booking details
+- [x] Add calendar links to booking confirmation (for both client and practitioner)
 
 ## Herb Shop
-- [ ] Build `/shop` page — product grid with filter sidebar (category, concern tags)
-- [ ] Build `ProductCard` component
-- [ ] Build `/shop/[slug]` product detail page — image, description, ingredients, usage, pricing, "Recommended by" badge
-- [ ] Build `FilterSidebar` component
+- [x] Build `/shop` page — product grid with filter sidebar (category, concern tags)
+- [x] Build `ProductCard` component
+- [x] Build `/shop/[slug]` product detail page — image, description, ingredients, usage, pricing, "Recommended by" badge, related products
+- [x] Build `FilterSidebar` component
+- [x] Build `AddToBasketButton` component (client component for server-rendered detail page)
 
-## Cart
-- [ ] Set up cart state (React Context)
-- [ ] Build `/cart` page — line items, quantities, subtotal, mock checkout
-- [ ] Build `CartLineItem` component
-- [ ] Cart icon in header shows live item count
+## Cart & Stripe Checkout
+- [x] Set up cart state (React Context + `CartProvider` + `useCart` hook)
+- [x] Build `Providers` wrapper component for layout
+- [x] Build `/cart` page — line items, quantities, subtotal, "Proceed to Checkout" button
+- [x] Build `CartLineItem` component
+- [x] Cart icon in header shows live item count (hidden when 0)
+- [x] Install `stripe` and `@stripe/stripe-js` packages
+- [x] Create `/api/checkout` API route — creates Stripe Checkout Session with cart items
+- [x] Build `/checkout/success` page — post-payment confirmation
+- [ ] Set up Stripe test mode env vars (`STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`) — needs Stripe account
+- [x] Wire up cart → Stripe Checkout → success page flow (graceful error if Stripe not configured)
+
+## Git & Deploy
+- [x] Git commit + push (Vercel auto-deploys)
+- [ ] Add Stripe env vars to Vercel project settings — needs Stripe account
+
+---
+
+# Milestone 4: Learn + Contact
+_(tasks to be detailed when M3 is complete)_
+
+---
+
+# Milestone 5: Client Account Area
+_(tasks to be detailed when M4 is complete)_
+
+---
+
+# Milestone 6: Practitioner Portal
+_(tasks to be detailed when M5 is complete)_
+
+---
+
+# Milestone 7: Database, Auth & Image Storage (Post-V1)
+
+## Database
+- [ ] Choose and set up hosted Postgres (Vercel Postgres / Supabase / Neon)
+- [ ] Install and configure ORM (Prisma or Drizzle)
+- [ ] Design database schema — practitioners, products, articles, bookings, prescriptions, orders, users
+- [ ] Seed database with existing dummy data
+
+## Authentication
+- [ ] Install and configure Auth.js (NextAuth.js)
+- [ ] Implement real login/signup (email/password and/or Google sign-in)
+- [ ] Add role-based access control (client vs practitioner)
+- [ ] Replace simulated auth toggle with real auth state
+
+## Image Storage
+- [ ] Set up image storage service (Cloudinary / Vercel Blob / S3)
+- [ ] Build image upload flow for practitioner photos, product images, article images
+- [ ] Migrate existing Unsplash placeholder images to storage
+
+## Data Migration
+- [ ] Replace all TypeScript data file imports with database queries
+- [ ] Verify all existing pages work identically with database-backed data
 
 ## Git & Deploy
 - [ ] Git commit + push (Vercel auto-deploys)
+- [ ] Configure production database and env vars on Vercel
+
+---
+
+# Milestone 8: Google Calendar OAuth Integration (Post-V1)
+
+## Google Cloud Setup
+- [ ] Create Google Cloud project and enable Calendar API
+- [ ] Configure OAuth2 consent screen and credentials
+- [ ] Set up environment variables for Google OAuth
+
+## OAuth Flow
+- [ ] Build "Connect Google Calendar" button in practitioner portal
+- [ ] Implement OAuth callback route — exchange code for tokens, store in database
+- [ ] Handle token refresh (access tokens expire)
+- [ ] Build "Disconnect Calendar" option
+
+## Calendar Sync
+- [ ] Auto-create Google Calendar events on booking confirmation
+- [ ] Pull real free/busy data for practitioner availability page
+- [ ] Handle edge cases (calendar disconnected, token expired, API errors)
+
+## Git & Deploy
+- [ ] Git commit + push (Vercel auto-deploys)
+- [ ] Configure Google OAuth env vars on Vercel
