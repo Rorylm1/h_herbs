@@ -1,0 +1,176 @@
+/*
+  DUMMY DATA — Herb Products
+
+  12 products across 4 categories. Each has concern tags for
+  filtering and an optional practitioner recommendation link.
+*/
+
+export type Product = {
+  slug: string;
+  name: string;
+  category: "Tinctures" | "Teas" | "Capsules" | "Dried Herbs";
+  concerns: string[];
+  price: number;
+  image: string;
+  shortDescription: string;
+  fullDescription: string;
+  ingredients: string;
+  usage: string;
+  recommendedBy?: string;
+};
+
+export const products: Product[] = [
+  {
+    slug: "chamomile-lavender-tea",
+    name: "Chamomile & Lavender Tea Blend",
+    category: "Teas",
+    concerns: ["Sleep", "Relaxation"],
+    price: 12.5,
+    image: "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=600&h=600&fit=crop",
+    shortDescription: "A soothing bedtime blend to calm the mind and promote restful sleep.",
+    fullDescription: "Our signature Chamomile & Lavender blend combines two of nature's most beloved calming herbs. Chamomile (Matricaria chamomilla) has been used for centuries as a gentle nervine and digestive soother, while lavender (Lavandula angustifolia) brings its renowned relaxing aroma and mild sedative properties. Together, they create a beautifully fragrant cup that's perfect for your evening wind-down ritual.",
+    ingredients: "Organic chamomile flowers, organic lavender buds",
+    usage: "Steep 1-2 teaspoons in freshly boiled water for 5-7 minutes. Enjoy 30 minutes before bedtime.",
+    recommendedBy: "priya-sharma",
+  },
+  {
+    slug: "echinacea-tincture",
+    name: "Echinacea Tincture",
+    category: "Tinctures",
+    concerns: ["Immune Support"],
+    price: 18.0,
+    image: "https://images.unsplash.com/photo-1471943311424-646960669fbc?w=600&h=600&fit=crop",
+    shortDescription: "A potent immune-boosting tincture made from organic Echinacea purpurea.",
+    fullDescription: "Our Echinacea tincture is crafted from the whole flowering plant of Echinacea purpurea, harvested at peak potency. Echinacea is one of the most well-researched herbs for immune support, known for its ability to stimulate the body's natural defence mechanisms. This tincture is ideal for use at the first signs of seasonal challenges or as part of a daily immune-support routine.",
+    ingredients: "Echinacea purpurea (whole plant), organic grain alcohol, spring water",
+    usage: "Take 2.5ml (half a teaspoon) in a little water, 3 times daily. At the onset of symptoms, dose can be increased to every 2 hours for the first day.",
+    recommendedBy: "hector",
+  },
+  {
+    slug: "ashwagandha-capsules",
+    name: "Ashwagandha Capsules",
+    category: "Capsules",
+    concerns: ["Stress", "Energy"],
+    price: 22.0,
+    image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&h=600&fit=crop",
+    shortDescription: "Adaptogenic support for stress resilience and sustained energy.",
+    fullDescription: "Ashwagandha (Withania somnifera) is one of the most prized adaptogens in Ayurvedic medicine. Our capsules contain high-quality KSM-66 ashwagandha root extract, standardised for active withanolides. This remarkable herb helps the body adapt to stress while supporting healthy energy levels, cognitive function, and overall vitality without the jittery effects of stimulants.",
+    ingredients: "KSM-66 Ashwagandha root extract (600mg), vegetable cellulose capsule",
+    usage: "Take 1 capsule twice daily with food. Best taken consistently for 4-8 weeks for full adaptogenic benefits.",
+    recommendedBy: "priya-sharma",
+  },
+  {
+    slug: "valerian-root-tincture",
+    name: "Valerian Root Tincture",
+    category: "Tinctures",
+    concerns: ["Sleep"],
+    price: 16.5,
+    image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=600&h=600&fit=crop",
+    shortDescription: "A powerful sleep aid from nature's strongest sedative herb.",
+    fullDescription: "Valerian root (Valeriana officinalis) has been used since ancient Greek and Roman times as a natural sleep remedy. Our tincture is made from sustainably harvested valerian root, carefully extracted to preserve its full spectrum of active compounds including valerenic acid. It works by supporting GABA activity in the brain, promoting a natural, deep sleep without morning grogginess.",
+    ingredients: "Valerian root (Valeriana officinalis), organic grain alcohol, spring water",
+    usage: "Take 2.5-5ml in warm water 30-60 minutes before bedtime. Can be combined with our Chamomile & Lavender tea for enhanced effect.",
+  },
+  {
+    slug: "turmeric-black-pepper-capsules",
+    name: "Turmeric & Black Pepper Capsules",
+    category: "Capsules",
+    concerns: ["Inflammation", "Pain"],
+    price: 19.0,
+    image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=600&h=600&fit=crop",
+    shortDescription: "Anti-inflammatory support with enhanced bioavailability.",
+    fullDescription: "Our Turmeric & Black Pepper capsules combine high-strength turmeric root extract (standardised to 95% curcuminoids) with black pepper extract (piperine) to enhance absorption by up to 2000%. Curcumin, the active compound in turmeric, is one of nature's most potent anti-inflammatory agents, supporting joint health, digestive comfort, and overall wellbeing.",
+    ingredients: "Turmeric root extract (500mg, 95% curcuminoids), black pepper extract (10mg, 95% piperine), vegetable cellulose capsule",
+    usage: "Take 1 capsule twice daily with food.",
+    recommendedBy: "elena-vasquez",
+  },
+  {
+    slug: "peppermint-fennel-tea",
+    name: "Peppermint & Fennel Tea",
+    category: "Teas",
+    concerns: ["Digestion"],
+    price: 11.0,
+    image: "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=600&h=600&fit=crop",
+    shortDescription: "A refreshing digestive blend to ease bloating and discomfort.",
+    fullDescription: "This classic digestive duo brings together peppermint (Mentha piperita) and fennel seed (Foeniculum vulgare) for a refreshing, carminative tea. Peppermint relaxes the smooth muscles of the digestive tract while fennel helps dispel gas and ease bloating. Together, they make the perfect after-meal brew or a gentle daily digestive tonic.",
+    ingredients: "Organic peppermint leaves, organic fennel seeds",
+    usage: "Steep 1-2 teaspoons in freshly boiled water for 5-10 minutes. Best enjoyed after meals.",
+    recommendedBy: "hector",
+  },
+  {
+    slug: "milk-thistle-tincture",
+    name: "Milk Thistle Tincture",
+    category: "Tinctures",
+    concerns: ["Liver Support", "Detox"],
+    price: 17.0,
+    image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=600&h=600&fit=crop",
+    shortDescription: "Premium liver support from nature's most renowned hepatoprotective herb.",
+    fullDescription: "Milk thistle (Silybum marianum) has been used for over 2,000 years to protect and support liver health. Our tincture is made from organic milk thistle seeds, rich in the active complex silymarin. This powerful antioxidant helps protect liver cells from damage, supports the liver's natural detoxification processes, and may aid in liver cell regeneration.",
+    ingredients: "Milk thistle seed (Silybum marianum), organic grain alcohol, spring water",
+    usage: "Take 2.5ml in a little water, 2-3 times daily before meals.",
+  },
+  {
+    slug: "elderberry-syrup",
+    name: "Elderberry Syrup",
+    category: "Tinctures",
+    concerns: ["Immune Support", "Cold & Flu"],
+    price: 15.0,
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=600&fit=crop",
+    shortDescription: "Delicious immune support rich in antioxidants and vitamin C.",
+    fullDescription: "Our Elderberry Syrup is a family-friendly immune tonic made from organic elderberries (Sambucus nigra), raw honey, and warming spices. Elderberries are rich in anthocyanins and vitamin C, with a long tradition of use during the cold and flu season. The addition of ginger, cinnamon, and clove adds warming properties and extra antimicrobial benefits.",
+    ingredients: "Organic elderberries, raw honey, fresh ginger root, cinnamon bark, whole cloves, spring water",
+    usage: "Adults: 1 tablespoon daily for prevention, or 1 tablespoon every 3 hours during acute illness. Children (2+): 1 teaspoon daily.",
+    recommendedBy: "thomas-whitfield",
+  },
+  {
+    slug: "dried-nettle-leaf",
+    name: "Dried Nettle Leaf",
+    category: "Dried Herbs",
+    concerns: ["Allergies", "Iron Support"],
+    price: 8.5,
+    image: "https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=600&h=600&fit=crop",
+    shortDescription: "A mineral-rich superfood herb for allergy support and nourishment.",
+    fullDescription: "Stinging nettle leaf (Urtica dioica) is one of the most nutritious herbs available, packed with iron, calcium, magnesium, and vitamins A, C, and K. Traditionally used for hay fever and allergic rhinitis, nettle leaf is also a wonderful daily nourishing tonic. Our dried nettle is sustainably harvested and gently dried to preserve its rich mineral content and vivid green colour.",
+    ingredients: "100% organic dried nettle leaf (Urtica dioica)",
+    usage: "Steep 1-2 tablespoons in boiling water for 10-15 minutes for a nourishing tea. For maximum mineral extraction, make an overnight infusion: steep 30g in 1 litre of boiling water for 4-8 hours.",
+    recommendedBy: "thomas-whitfield",
+  },
+  {
+    slug: "lemon-balm-passionflower-tea",
+    name: "Lemon Balm & Passionflower Tea",
+    category: "Teas",
+    concerns: ["Anxiety", "Calm"],
+    price: 13.0,
+    image: "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?w=600&h=600&fit=crop",
+    shortDescription: "A gentle anxiolytic blend for daytime calm without drowsiness.",
+    fullDescription: "This carefully crafted blend pairs lemon balm (Melissa officinalis) with passionflower (Passiflora incarnata) for gentle anxiety relief that won't make you sleepy. Lemon balm, a member of the mint family, brings a bright, lemony flavour along with its calming and mood-lifting properties. Passionflower adds deeper nervous system support, helping to quiet a racing mind.",
+    ingredients: "Organic lemon balm leaves, organic passionflower herb",
+    usage: "Steep 1-2 teaspoons in freshly boiled water for 5-7 minutes. Can be enjoyed throughout the day.",
+    recommendedBy: "priya-sharma",
+  },
+  {
+    slug: "rhodiola-capsules",
+    name: "Rhodiola Capsules",
+    category: "Capsules",
+    concerns: ["Energy", "Fatigue"],
+    price: 24.0,
+    image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&h=600&fit=crop",
+    shortDescription: "Arctic adaptogen for mental clarity and physical endurance.",
+    fullDescription: "Rhodiola rosea, the 'golden root', thrives in the harsh conditions of the Arctic and high mountains. This remarkable adaptogen has been used for centuries in Scandinavian and Russian traditional medicine to combat fatigue, enhance mental performance, and build physical endurance. Our capsules contain standardised Rhodiola extract with optimal levels of rosavins and salidroside.",
+    ingredients: "Rhodiola rosea root extract (400mg, standardised to 3% rosavins, 1% salidroside), vegetable cellulose capsule",
+    usage: "Take 1 capsule in the morning with breakfast. For demanding periods, a second capsule can be taken at lunch. Avoid taking after 2pm as it may affect sleep.",
+    recommendedBy: "hector",
+  },
+  {
+    slug: "hawthorn-berry-tincture",
+    name: "Hawthorn Berry Tincture",
+    category: "Tinctures",
+    concerns: ["Heart Health", "Circulation"],
+    price: 18.5,
+    image: "https://images.unsplash.com/photo-1471943311424-646960669fbc?w=600&h=600&fit=crop",
+    shortDescription: "Traditional heart tonic for cardiovascular and circulatory support.",
+    fullDescription: "Hawthorn (Crataegus monogyna) has been revered as a heart herb throughout European herbal traditions. Our tincture is made from the berries, flowers, and leaves of the hawthorn tree, capturing the full spectrum of flavonoids, procyanidins, and triterpene acids. Hawthorn supports healthy blood pressure, strengthens the heart muscle, and improves peripheral circulation.",
+    ingredients: "Hawthorn berries, flowers, and leaves (Crataegus monogyna), organic grain alcohol, spring water",
+    usage: "Take 2.5ml in a little water, 2-3 times daily. Best used as a long-term tonic — allow 8-12 weeks for full cardiovascular benefits.",
+  },
+];

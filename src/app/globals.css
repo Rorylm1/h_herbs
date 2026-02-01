@@ -1,26 +1,53 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  DESIGN SYSTEM — Tailwind v4 theme tokens
+
+  In Tailwind v4, we define custom colours/fonts/spacing here in CSS
+  instead of a tailwind.config.js file. These tokens become available
+  as utility classes like `bg-sage-200`, `text-forest-700`, etc.
+*/
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Sage greens — the primary brand palette */
+  --color-sage-50: #f0f7f5;
+  --color-sage-100: #dceee9;
+  --color-sage-200: #b8e0d6;
+  --color-sage-300: #8ecdbf;
+
+  /* Deep forest greens — headings, buttons, dark sections */
+  --color-forest-700: #2d5a47;
+  --color-forest-800: #1e3f32;
+  --color-forest-900: #142b22;
+
+  /* Warm earth tones — alternating section backgrounds */
+  --color-earth-100: #faf6f1;
+  --color-earth-200: #f0e6d8;
+  --color-earth-400: #c4a882;
+
+  /* Neutrals */
+  --color-cream: #fdfcf9;
+  --color-charcoal: #2c2c2c;
+  --color-muted: #6b7280;
+
+  /* Typography — loaded via next/font in layout.tsx */
+  --font-heading: var(--font-cormorant);
+  --font-body: var(--font-lato);
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-modal: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Base styles applied to the whole site */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+/* Heading defaults — all h1-h4 use the serif font */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading), Georgia, serif;
 }
