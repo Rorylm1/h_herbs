@@ -3,12 +3,14 @@
 
   Shows featured image, category tag, title, author, and excerpt.
   Used on the homepage (latest 3) and the /learn page.
+  A small botanical corner accent adds visual warmth.
 */
 
 import Image from "next/image";
 import Link from "next/link";
 import type { Article } from "@/data/articles";
 import { practitioners } from "@/data/practitioners";
+import BotanicalBorder from "@/components/svg/BotanicalBorder";
 
 export default function ArticleCard({ article }: { article: Article }) {
   // Look up the author's name from the practitioners data
@@ -32,6 +34,8 @@ export default function ArticleCard({ article }: { article: Article }) {
         <span className="absolute top-3 left-3 rounded-full bg-forest-700/90 px-3 py-1 text-xs font-medium text-white">
           {article.category}
         </span>
+        {/* Botanical corner accent */}
+        <BotanicalBorder position="bottom-right" className="absolute bottom-0 right-0 w-14 h-14 text-white opacity-20" />
       </div>
 
       {/* Content */}

@@ -12,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
+import LatinName from "@/components/LatinName";
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
@@ -42,6 +43,11 @@ export default function ProductCard({ product }: { product: Product }) {
             {product.name}
           </h3>
         </Link>
+
+        {/* Latin botanical name */}
+        {product.latinName && (
+          <LatinName name={product.latinName} className="mt-0.5 block" />
+        )}
 
         {/* Concern tags */}
         <div className="mt-1.5 flex flex-wrap gap-1">

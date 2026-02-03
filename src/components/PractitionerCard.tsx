@@ -10,6 +10,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Practitioner } from "@/data/practitioners";
+import BotanicalBorder from "@/components/svg/BotanicalBorder";
 
 export default function PractitionerCard({
   practitioner,
@@ -30,6 +31,10 @@ export default function PractitionerCard({
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
+        {/* Subtle botanical corner accent on the photo */}
+        <div className="absolute bottom-0 right-0 opacity-30">
+          <BotanicalBorder position="bottom-right" className="w-14 h-14 text-white" />
+        </div>
       </div>
 
       {/* Info */}

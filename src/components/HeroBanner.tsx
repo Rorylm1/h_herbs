@@ -7,6 +7,8 @@
 */
 
 import Link from "next/link";
+import BotanicalPattern from "@/components/svg/BotanicalPattern";
+import DandelionWatermark from "@/components/DandelionWatermark";
 
 export default function HeroBanner() {
   return (
@@ -14,39 +16,18 @@ export default function HeroBanner() {
       {/* Gradient overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-br from-forest-900/90 via-forest-800/80 to-sage-300/20" />
 
-      {/* Decorative botanical pattern — subtle SVG circles */}
-      <div className="absolute inset-0 opacity-10">
-        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern
-              id="hero-leaves"
-              x="0"
-              y="0"
-              width="80"
-              height="80"
-              patternUnits="userSpaceOnUse"
-            >
-              <circle cx="40" cy="40" r="1.5" fill="white" />
-              <path
-                d="M20 10 C20 10 15 18 15 22 C15 25 17 27 20 27 C23 27 25 25 25 22 C25 18 20 10 20 10Z"
-                fill="none"
-                stroke="white"
-                strokeWidth="0.5"
-              />
-              <path
-                d="M60 50 C60 50 55 58 55 62 C55 65 57 67 60 67 C63 67 65 65 65 62 C65 58 60 50 60 50Z"
-                fill="none"
-                stroke="white"
-                strokeWidth="0.5"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#hero-leaves)" />
-        </svg>
-      </div>
+      {/* Botanical pattern — richer hand-drawn tile pattern replaces simple dots */}
+      <BotanicalPattern className="absolute inset-0 text-white opacity-[0.06]" patternId="hero-botanical" />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 lg:py-36">
+      {/* Dandelion watermark on the right side */}
+      <DandelionWatermark position="right" size="lg" className="text-white" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28 lg:py-36">
         <div className="max-w-2xl">
+          {/* Latin tagline — the healing power of nature */}
+          <p className="font-heading italic text-sage-200/60 text-sm tracking-wide mb-3">
+            Vis medicatrix naturae
+          </p>
           <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-semibold text-white leading-tight">
             Natural healing,
             <br />

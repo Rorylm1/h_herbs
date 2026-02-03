@@ -11,6 +11,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import DandelionLogo from "@/components/svg/DandelionLogo";
 
 const navLinks = [
   { href: "/herbalists", label: "Our Herbalists" },
@@ -30,6 +31,7 @@ export default function SiteHeader() {
         <div className="flex h-16 items-center justify-between md:h-20">
           {/* Logo / Brand */}
           <Link href="/" className="flex items-center gap-2">
+            <DandelionLogo variant="icon" className="h-7 w-7 md:h-8 md:w-8 text-forest-700" />
             <span className="font-heading text-2xl font-semibold text-forest-700 md:text-3xl">
               Hector&apos;s Herbs
             </span>

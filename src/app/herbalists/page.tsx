@@ -9,6 +9,8 @@
 import { practitioners } from "@/data/practitioners";
 import PractitionerCard from "@/components/PractitionerCard";
 import SectionHeading from "@/components/SectionHeading";
+import BotanicalPattern from "@/components/svg/BotanicalPattern";
+import DandelionWatermark from "@/components/DandelionWatermark";
 
 export const metadata = {
   title: "Our Herbalists | Hector's Herbs",
@@ -20,8 +22,9 @@ export default function HerbalistsPage() {
   return (
     <>
       {/* Page hero */}
-      <section className="bg-forest-800 py-16 md:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative bg-forest-800 py-16 md:py-20 overflow-hidden">
+        <BotanicalPattern className="absolute inset-0 text-white opacity-[0.04]" patternId="herbalists-hero-pattern" />
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-heading text-4xl md:text-5xl font-semibold text-white">
             Our Herbalists
           </h1>
@@ -45,8 +48,9 @@ export default function HerbalistsPage() {
       </section>
 
       {/* CTA banner */}
-      <section className="bg-sage-50 py-12 md:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative bg-sage-50 py-12 md:py-16 overflow-hidden">
+        <DandelionWatermark position="right" size="md" className="text-sage-300" />
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-heading text-2xl md:text-3xl font-semibold text-forest-700">
             Not sure who to book with?
           </h2>

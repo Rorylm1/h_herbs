@@ -7,6 +7,7 @@
 */
 
 import type { Review } from "@/data/practitioners";
+import QuoteLeaf from "@/components/svg/QuoteLeaf";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -37,7 +38,10 @@ function StarRating({ rating }: { rating: number }) {
 export default function ReviewCard({ review }: { review: Review }) {
   return (
     <div className="rounded-xl bg-white border border-sage-100 p-6 shadow-card">
-      <StarRating rating={review.rating} />
+      <div className="flex items-start justify-between">
+        <StarRating rating={review.rating} />
+        <QuoteLeaf className="h-6 w-8 text-sage-200 -mt-1" />
+      </div>
       <blockquote className="mt-3 text-sm text-charcoal leading-relaxed italic">
         &ldquo;{review.text}&rdquo;
       </blockquote>

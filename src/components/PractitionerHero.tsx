@@ -10,6 +10,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Practitioner } from "@/data/practitioners";
+import BotanicalPattern from "@/components/svg/BotanicalPattern";
 
 export default function PractitionerHero({
   practitioner,
@@ -17,8 +18,10 @@ export default function PractitionerHero({
   practitioner: Practitioner;
 }) {
   return (
-    <section className="bg-earth-100">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+    <section className="relative bg-earth-100 overflow-hidden">
+      {/* Subtle botanical pattern background */}
+      <BotanicalPattern className="absolute inset-0 text-sage-300 opacity-[0.04]" patternId="practitioner-hero-pattern" />
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
         <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
           {/* Photo */}
           <div className="w-full md:w-72 lg:w-80 shrink-0">

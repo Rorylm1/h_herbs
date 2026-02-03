@@ -5,6 +5,8 @@
 */
 
 import Link from "next/link";
+import DandelionLogo from "@/components/svg/DandelionLogo";
+import BotanicalPattern from "@/components/svg/BotanicalPattern";
 
 export default function ComingSoon({
   title,
@@ -14,22 +16,11 @@ export default function ComingSoon({
   milestone: number;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 md:py-32 px-4">
-      {/* Decorative leaf */}
-      <svg
-        width="48"
-        height="48"
-        viewBox="0 0 24 24"
-        fill="none"
-        className="text-sage-200 mb-6"
-      >
-        <path
-          d="M12 3C12 3 7 8 7 13C7 15.76 9.24 18 12 18C14.76 18 17 15.76 17 13C17 8 12 3 12 3Z"
-          fill="currentColor"
-          opacity="0.6"
-        />
-        <path d="M12 18V21" stroke="currentColor" strokeWidth="1.5" />
-      </svg>
+    <div className="relative flex flex-col items-center justify-center py-24 md:py-32 px-4 overflow-hidden">
+      {/* Subtle background pattern */}
+      <BotanicalPattern className="absolute inset-0 text-sage-300 opacity-[0.03]" patternId="coming-soon-pattern" />
+      {/* Dandelion logo — seeds dispersing, a nice visual for "coming soon" */}
+      <DandelionLogo variant="full" className="h-12 w-32 text-sage-200 mb-6" />
 
       <h1 className="font-heading text-3xl md:text-4xl font-semibold text-forest-700 text-center">
         {title}

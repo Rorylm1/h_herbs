@@ -17,12 +17,14 @@ export type Product = {
   ingredients: string;
   usage: string;
   recommendedBy?: string;
+  latinName?: string; // Botanical Latin name(s), e.g. "Matricaria chamomilla"
 };
 
 export const products: Product[] = [
   {
     slug: "chamomile-lavender-tea",
     name: "Chamomile & Lavender Tea Blend",
+    latinName: "Matricaria chamomilla, Lavandula angustifolia",
     category: "Teas",
     concerns: ["Sleep", "Relaxation"],
     price: 12.5,
@@ -36,6 +38,7 @@ export const products: Product[] = [
   {
     slug: "echinacea-tincture",
     name: "Echinacea Tincture",
+    latinName: "Echinacea purpurea",
     category: "Tinctures",
     concerns: ["Immune Support"],
     price: 18.0,
@@ -49,6 +52,7 @@ export const products: Product[] = [
   {
     slug: "ashwagandha-capsules",
     name: "Ashwagandha Capsules",
+    latinName: "Withania somnifera",
     category: "Capsules",
     concerns: ["Stress", "Energy"],
     price: 22.0,
@@ -62,6 +66,7 @@ export const products: Product[] = [
   {
     slug: "valerian-root-tincture",
     name: "Valerian Root Tincture",
+    latinName: "Valeriana officinalis",
     category: "Tinctures",
     concerns: ["Sleep"],
     price: 16.5,
@@ -74,6 +79,7 @@ export const products: Product[] = [
   {
     slug: "turmeric-black-pepper-capsules",
     name: "Turmeric & Black Pepper Capsules",
+    latinName: "Curcuma longa, Piper nigrum",
     category: "Capsules",
     concerns: ["Inflammation", "Pain"],
     price: 19.0,
@@ -87,6 +93,7 @@ export const products: Product[] = [
   {
     slug: "peppermint-fennel-tea",
     name: "Peppermint & Fennel Tea",
+    latinName: "Mentha piperita, Foeniculum vulgare",
     category: "Teas",
     concerns: ["Digestion"],
     price: 11.0,
@@ -100,6 +107,7 @@ export const products: Product[] = [
   {
     slug: "milk-thistle-tincture",
     name: "Milk Thistle Tincture",
+    latinName: "Silybum marianum",
     category: "Tinctures",
     concerns: ["Liver Support", "Detox"],
     price: 17.0,
@@ -112,6 +120,7 @@ export const products: Product[] = [
   {
     slug: "elderberry-syrup",
     name: "Elderberry Syrup",
+    latinName: "Sambucus nigra",
     category: "Tinctures",
     concerns: ["Immune Support", "Cold & Flu"],
     price: 15.0,
@@ -125,6 +134,7 @@ export const products: Product[] = [
   {
     slug: "dried-nettle-leaf",
     name: "Dried Nettle Leaf",
+    latinName: "Urtica dioica",
     category: "Dried Herbs",
     concerns: ["Allergies", "Iron Support"],
     price: 8.5,
@@ -138,6 +148,7 @@ export const products: Product[] = [
   {
     slug: "lemon-balm-passionflower-tea",
     name: "Lemon Balm & Passionflower Tea",
+    latinName: "Melissa officinalis, Passiflora incarnata",
     category: "Teas",
     concerns: ["Anxiety", "Calm"],
     price: 13.0,
@@ -151,6 +162,7 @@ export const products: Product[] = [
   {
     slug: "rhodiola-capsules",
     name: "Rhodiola Capsules",
+    latinName: "Rhodiola rosea",
     category: "Capsules",
     concerns: ["Energy", "Fatigue"],
     price: 24.0,
@@ -164,6 +176,7 @@ export const products: Product[] = [
   {
     slug: "hawthorn-berry-tincture",
     name: "Hawthorn Berry Tincture",
+    latinName: "Crataegus monogyna",
     category: "Tinctures",
     concerns: ["Heart Health", "Circulation"],
     price: 18.5,

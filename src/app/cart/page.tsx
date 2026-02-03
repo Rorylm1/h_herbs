@@ -23,6 +23,8 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import CartLineItem from "@/components/CartLineItem";
 import { useState } from "react";
+import DandelionWatermark from "@/components/DandelionWatermark";
+import BotanicalBorder from "@/components/svg/BotanicalBorder";
 
 export default function CartPage() {
   const { items, totalPrice, clearCart } = useCart();
@@ -61,8 +63,9 @@ export default function CartPage() {
   /* ── Empty cart state ── */
   if (items.length === 0) {
     return (
-      <section className="bg-cream py-20 md:py-28">
-        <div className="mx-auto max-w-lg px-4 text-center">
+      <section className="relative bg-cream py-20 md:py-28 overflow-hidden">
+        <DandelionWatermark position="right" size="lg" className="text-sage-300" />
+        <div className="relative z-10 mx-auto max-w-lg px-4 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sage-50">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -115,9 +118,11 @@ export default function CartPage() {
           ))}
         </div>
 
-        {/* Subtotal + Checkout */}
-        <div className="mt-8 rounded-xl bg-white border border-sage-100 p-6">
-          <div className="flex items-center justify-between mb-4">
+        {/* Subtotal + Checkout — with botanical corner accents */}
+        <div className="relative mt-8 rounded-xl bg-white border border-sage-100 p-6 overflow-hidden">
+          <BotanicalBorder position="top-right" className="absolute top-0 right-0 w-14 h-14 text-sage-200 opacity-30" />
+          <BotanicalBorder position="bottom-left" className="absolute bottom-0 left-0 w-14 h-14 text-sage-200 opacity-30" />
+          <div className="relative z-10 flex items-center justify-between mb-4">
             <span className="text-lg font-semibold text-charcoal">
               Subtotal
             </span>

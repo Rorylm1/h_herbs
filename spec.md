@@ -76,6 +76,18 @@
 - `Button` — Primary, secondary, outline variants.
 - `AuthToggle` — Dev/prototype toggle to simulate states: logged-out, client logged-in, practitioner logged-in. Floating in corner, visually distinct from the real UI.
 
+### Botanical / Decorative SVG Components
+- `DandelionLogo` — SVG brand icon (full and icon variants). Dandelion head with dispersing seeds, hand-drawn style. Used in header, footer, watermarks throughout.
+- `BotanicalDivider` — Decorative section divider with central dandelion motif flanked by herb sprigs. Replaces simple leaf divider. Variants: simple, elaborate.
+- `BotanicalBorder` — Corner botanical illustration (L-shaped leaf cluster) for framing cards and sections. Mirrored via CSS transform for all four corners.
+- `BotanicalPattern` — Repeatable SVG tile pattern (small leaves, dots, seed shapes) for subtle background textures on hero sections, footer, and feature areas.
+- `OrganicDivider` — Full-width organic wave/vine shapes for section transitions. Variants: wave, leaf-vine, seeds.
+- `HerbIllustration` — Individual botanical illustrations of key herbs (chamomile, elderberry, nettle, dandelion, lavender, echinacea) for decorative use.
+- `QuoteLeaf` — Decorative quotation mark combined with botanical accent for testimonials.
+- `DandelionWatermark` — Low-opacity positioned dandelion motif for background depth behind content sections.
+- `VideoPlaceholder` — Homepage video section with poster image, play button overlay, and botanical framing.
+- `LatinName` — Typography utility for rendering Latin botanical names in consistent italic serif style.
+
 ### Page-Specific Components
 - `PractitionerHero` — Large profile header with photo, name, title, key stats.
 - `ServicesTable` — Pricing table for consultation types on practitioner profile.
@@ -145,8 +157,15 @@ Base unit: 4px. Tokens: `xs: 4px`, `sm: 8px`, `md: 16px`, `lg: 24px`, `xl: 32px`
 - `modal`: `0 8px 30px rgba(0,0,0,0.15)` — modals/dropdowns
 
 ### Decorative Elements
-- Botanical line dividers between sections (simple SVG herb sprigs/leaves)
-- Subtle leaf/botanical corner accents on hero sections
+- **Dandelion Logo** — Hand-drawn SVG dandelion with dispersing seeds. Primary brand icon in header/footer, recurring as watermarks and decorative motifs throughout the site.
+- **Botanical Dividers** — Hand-drawn herb sprig compositions replacing simple leaf dividers. Two variants: simple (centre motif + lines) and elaborate (full botanical composition).
+- **Botanical Borders** — Corner L-shaped botanical illustrations for framing cards, hero sections, and feature areas.
+- **Botanical Patterns** — Repeatable tile patterns with small botanical motifs (leaves, dots, seeds) for subtle background textures.
+- **Organic Section Transitions** — Full-width wave and vine shapes replacing hard horizontal lines between page sections.
+- **Herb Illustrations** — Individual botanical illustrations of key herbs (chamomile, elderberry, nettle, dandelion, lavender, echinacea) for decorative use.
+- **Latin Names** — Botanical names rendered consistently in italic serif (Cormorant Garamond italic) throughout the site, e.g. *Matricaria recutita*, *Sambucus nigra*.
+- **Watermarks** — Very low-opacity dandelion motifs placed behind content sections for depth.
+- **Brand Quotes** — Hippocrates ("Let food be thy medicine…") and Thoreau ("In wildness is the preservation of the world") used as textual accents.
 - Soft gradient overlays on imagery (forest-900 to transparent)
 
 ---
@@ -309,9 +328,9 @@ type Prescription = {
 - When a booking is confirmed, an event is automatically created in the practitioner's calendar
 - Availability page pulls real free/busy data from their connected calendar
 - Requires: Google Cloud project, OAuth2 consent screen, API routes, token storage (database), refresh token handling
-- Depends on Milestone 7 (database) for storing OAuth tokens
+- Depends on Milestone 8 (database) for storing OAuth tokens
 
-**Rationale for two phases:** Phase 1 delivers real calendar functionality with zero infrastructure overhead — perfect for the V1 prototype. Phase 2 requires a database for OAuth token storage (Milestone 7), which is the natural transition point from prototype to production application.
+**Rationale for two phases:** Phase 1 delivers real calendar functionality with zero infrastructure overhead — perfect for the V1 prototype. Phase 2 requires a database for OAuth token storage (Milestone 8), which is the natural transition point from prototype to production application.
 
 ---
 
@@ -376,7 +395,22 @@ type Prescription = {
 - Git commit + push. Vercel auto-deploys.
 - **Testable:** Toggle to practitioner logged-in state. View practitioner dashboard, manage availability (toggle slots), browse appointments, write a prescription, edit profile, create an article draft. All visual/mock.
 
-### Milestone 7: Database, Auth & Image Storage (Post-V1)
+### Milestone 7: Visual Design Enhancement
+A visual-only pass across the entire site based on Hector's feedback. No routing, data models, or page structure changes — just richer botanical visuals.
+
+- **SVG Assets:** Create dandelion logo, botanical dividers, border accents, repeatable patterns, organic section transitions, individual herb illustrations.
+- **New Components:** `DandelionWatermark`, `VideoPlaceholder`, `LatinName`, and all botanical SVG components in `src/components/svg/`.
+- **Layout:** Dandelion icon added to `SiteHeader` and `SiteFooter` logos. Footer gains botanical pattern background and watermark. `SectionHeading` upgraded to `BotanicalDivider`.
+- **Homepage:** Richer `HeroBanner` with botanical overlays. New video placeholder section. Organic wave transitions between sections. Testimonials with botanical framing. Newsletter CTA with pattern background and brand quote.
+- **Practitioners:** Botanical accents on `PractitionerCard`, `PractitionerHero`, directory and profile pages. Organic dividers between profile sections.
+- **Shop:** `latinName` field added to `Product` type. Latin names displayed on `ProductCard` and product detail pages. Unique Unsplash product images. Botanical framing on product detail.
+- **Booking & Cart:** Organic vine connectors in `BookingStepper`. Botanical accents on booking confirmation and checkout success. Dandelion watermark on empty cart state.
+- **Typography:** Latin botanical names in italic serif throughout (via `LatinName` component). Brand quotes from Hippocrates and Thoreau.
+- **Inspiration:** Pukka Herbs (pukkaherbs.com) — rich hand-drawn botanical illustrations integrated into the brand identity. Hector's current site (hectorsherbs.com) — herb photography with Latin names (*Arctium lappa*, *Calendula officinalis*, etc.), ANP badge, naturopathic principles.
+- Git commit + push. Vercel auto-deploys.
+- **Testable:** All existing pages work identically but now feature botanical illustrations, dandelion branding throughout, organic section transitions, Latin names on products, and a video placeholder on the homepage. Visual richness without structural changes.
+
+### Milestone 8: Database, Auth & Image Storage (Post-V1)
 The transition from prototype to real application. This is the infrastructure foundation that everything beyond V1 depends on.
 
 - **Database:** Set up hosted Postgres (Vercel Postgres, Supabase, or Neon) with Prisma or Drizzle ORM
@@ -388,8 +422,8 @@ The transition from prototype to real application. This is the infrastructure fo
 - Git commit + push. Vercel auto-deploys.
 - **Testable:** All existing pages work identically but are now backed by real database queries. Real login/signup works. Images can be uploaded and persisted. Data survives page refreshes and deploys.
 
-### Milestone 8: Google Calendar OAuth Integration (Post-V1)
-Full Google Calendar integration for practitioners. Requires Milestone 7 (database for token storage).
+### Milestone 9: Google Calendar OAuth Integration (Post-V1)
+Full Google Calendar integration for practitioners. Requires Milestone 8 (database for token storage).
 
 - Set up Google Cloud project with Calendar API enabled and OAuth2 consent screen
 - Build OAuth flow: practitioner clicks "Connect Google Calendar" → Google consent screen → callback stores tokens in database
@@ -401,7 +435,7 @@ Full Google Calendar integration for practitioners. Requires Milestone 7 (databa
 - **Testable:** Practitioner connects their Google Calendar in the portal. Client makes a booking. Event appears automatically in the practitioner's Google Calendar. Availability page shows real data.
 
 ### Future Considerations
-- **Stripe Webhooks:** Listen for payment events (e.g., successful payment, refund) to update order status in real-time. Requires Milestone 7 database.
+- **Stripe Webhooks:** Listen for payment events (e.g., successful payment, refund) to update order status in real-time. Requires Milestone 8 database.
 - **Email Notifications:** Send booking confirmations and order receipts via email (e.g., Resend, SendGrid).
 - **Search:** Full-text search across products, articles, and practitioners.
 - **Analytics:** Track popular products, busiest practitioners, conversion rates.

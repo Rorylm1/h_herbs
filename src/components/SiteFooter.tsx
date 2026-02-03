@@ -6,6 +6,9 @@
 */
 
 import Link from "next/link";
+import DandelionLogo from "@/components/svg/DandelionLogo";
+import BotanicalPattern from "@/components/svg/BotanicalPattern";
+import OrganicDivider from "@/components/svg/OrganicDivider";
 
 const footerLinks = {
   explore: [
@@ -24,12 +27,17 @@ const footerLinks = {
 
 export default function SiteFooter() {
   return (
-    <footer className="bg-forest-800 text-white">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <footer className="relative bg-forest-800 text-white overflow-hidden">
+      {/* Organic vine transition at the top of the footer */}
+      <OrganicDivider variant="leaf-vine" flip className="w-full h-6 text-sage-200 absolute top-0 left-0" />
+      {/* Subtle botanical pattern overlay */}
+      <BotanicalPattern className="absolute inset-0 text-white opacity-[0.03]" patternId="footer-pattern" />
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16 pt-14 md:pt-18">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand column */}
           <div className="lg:col-span-1">
-            <Link href="/" className="inline-block">
+            <Link href="/" className="inline-flex items-center gap-2">
+              <DandelionLogo variant="icon" className="h-7 w-7 text-sage-200" />
               <span className="font-heading text-2xl font-semibold text-sage-200">
                 Hector&apos;s Herbs
               </span>
@@ -37,6 +45,9 @@ export default function SiteFooter() {
             <p className="mt-3 text-sm text-sage-200/70 leading-relaxed">
               Trained Naturopathic Herbalists providing the very best herbal
               remedies to help you regain your health and well-being.
+            </p>
+            <p className="mt-3 text-xs text-sage-200/40 italic font-heading leading-relaxed">
+              &ldquo;Let food be thy medicine and medicine be thy food&rdquo; &mdash; Hippocrates
             </p>
             {/* ANP Badge */}
             <div className="mt-4 inline-flex items-center gap-2 rounded-md bg-forest-900/50 px-3 py-2 text-xs text-sage-200/80">

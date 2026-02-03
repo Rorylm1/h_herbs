@@ -17,6 +17,7 @@ import { useState, useMemo } from "react";
 import { products } from "@/data/products";
 import ProductCard from "./ProductCard";
 import FilterSidebar from "./FilterSidebar";
+import BotanicalPattern from "@/components/svg/BotanicalPattern";
 
 export default function ShopContent() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -72,8 +73,9 @@ export default function ShopContent() {
   return (
     <>
       {/* Page hero */}
-      <section className="bg-forest-800 py-16 md:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative bg-forest-800 py-16 md:py-20 overflow-hidden">
+        <BotanicalPattern className="absolute inset-0 text-white opacity-[0.04]" patternId="shop-hero-pattern" />
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-heading text-4xl md:text-5xl font-semibold text-white">
             Herb Shop
           </h1>

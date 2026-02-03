@@ -18,6 +18,7 @@ import { products } from "@/data/products";
 import { practitioners } from "@/data/practitioners";
 import AddToBasketButton from "@/components/AddToBasketButton";
 import ProductCard from "@/components/ProductCard";
+import LatinName from "@/components/LatinName";
 
 /* Pre-build a page for each product */
 export function generateStaticParams() {
@@ -96,6 +97,9 @@ export default async function ProductDetailPage({
               <h1 className="font-heading text-3xl md:text-4xl font-semibold text-forest-700">
                 {product.name}
               </h1>
+              {product.latinName && (
+                <LatinName name={product.latinName} className="mt-1 block text-base" />
+              )}
 
               {/* Concern tags */}
               <div className="mt-3 flex flex-wrap gap-2">

@@ -25,6 +25,10 @@
   --color-earth-200: #f0e6d8;
   --color-earth-400: #c4a882;
 
+  /* Botanical accent — SVG illustration tones */
+  --color-botanical-line: #3d6b56;
+  --color-botanical-fill: #e8f0ec;
+
   /* Neutrals */
   --color-cream: #fdfcf9;
   --color-charcoal: #2c2c2c;
@@ -50,4 +54,18 @@ body {
 /* Heading defaults — all h1-h4 use the serif font */
 h1, h2, h3, h4 {
   font-family: var(--font-heading), Georgia, serif;
+}
+
+/* Latin botanical name styling — italic serif for names like Matricaria recutita */
+.latin-name {
+  font-family: var(--font-heading), Georgia, serif;
+  font-style: italic;
+}
+
+/* Watermark utility — background botanical motifs that don't interfere with content */
+.watermark {
+  pointer-events: none;
+  user-select: none;
+  position: absolute;
+  z-index: 0;
 }

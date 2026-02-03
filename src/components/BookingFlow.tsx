@@ -26,6 +26,9 @@ import Link from "next/link";
 import { practitioners } from "@/data/practitioners";
 import BookingStepper from "./BookingStepper";
 import AddToCalendarLink from "./AddToCalendarLink";
+import BotanicalBorder from "@/components/svg/BotanicalBorder";
+import BotanicalPattern from "@/components/svg/BotanicalPattern";
+import DandelionWatermark from "@/components/DandelionWatermark";
 
 /* ── Helper: parse "60 minutes" → 60 ── */
 function parseDuration(duration: string): number {
@@ -149,8 +152,9 @@ export default function BookingFlow() {
   return (
     <div>
       {/* Stepper */}
-      <div className="bg-earth-100 py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative bg-earth-100 py-8 overflow-hidden">
+        <BotanicalPattern className="absolute inset-0 text-forest-700 opacity-[0.03]" patternId="booking-stepper-pattern" />
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <BookingStepper currentStep={step} />
         </div>
       </div>
@@ -403,9 +407,12 @@ export default function BookingFlow() {
 
           {/* ═══════════ STEP 5: Confirmation ═══════════ */}
           {step === 5 && practitioner && service && (
-            <div className="text-center">
+            <div className="relative text-center overflow-hidden">
+              {/* Background watermark */}
+              <DandelionWatermark position="right" size="lg" className="text-sage-300" />
+
               {/* Checkmark */}
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sage-100">
+              <div className="relative z-10 mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sage-100">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -422,16 +429,18 @@ export default function BookingFlow() {
                 </svg>
               </div>
 
-              <h1 className="mt-5 font-heading text-2xl md:text-3xl font-semibold text-forest-700">
+              <h1 className="relative z-10 mt-5 font-heading text-2xl md:text-3xl font-semibold text-forest-700">
                 Booking Confirmed!
               </h1>
-              <p className="mt-2 text-muted">
+              <p className="relative z-10 mt-2 text-muted">
                 Your appointment has been booked. We&apos;ve sent a confirmation
                 to {details.email}.
               </p>
 
-              {/* Booking summary */}
-              <div className="mt-8 rounded-xl bg-white border border-sage-100 p-6 text-left max-w-md mx-auto">
+              {/* Booking summary — with botanical border accents */}
+              <div className="relative mt-8 rounded-xl bg-white border border-sage-100 p-6 text-left max-w-md mx-auto overflow-hidden">
+                <BotanicalBorder position="top-right" className="absolute top-0 right-0 w-16 h-16 text-sage-200 opacity-40" />
+                <BotanicalBorder position="bottom-left" className="absolute bottom-0 left-0 w-16 h-16 text-sage-200 opacity-40" />
                 <h3 className="font-heading text-lg font-semibold text-forest-700 mb-4">
                   Booking Summary
                 </h3>
@@ -485,7 +494,7 @@ export default function BookingFlow() {
                 const practitionerDesc = `Client: ${details.name}\nEmail: ${details.email}\nPhone: ${details.phone}\n\nService: ${service.name} (${service.duration})\n\nNotes: ${details.notes || "None provided"}`;
 
                 return (
-                  <div className="mt-8 space-y-3">
+                  <div className="relative z-10 mt-8 space-y-3">
                     <p className="text-sm text-muted">
                       Add this appointment to your calendar:
                     </p>
@@ -512,7 +521,7 @@ export default function BookingFlow() {
               })()}
 
               {/* Navigation links */}
-              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="relative z-10 mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                 <Link
                   href={`/herbalists/${practitioner.slug}`}
                   className="rounded-lg border border-sage-200 px-6 py-3 text-sm font-semibold text-forest-700 uppercase tracking-wide hover:bg-sage-50 transition-colors"

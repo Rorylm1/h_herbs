@@ -20,6 +20,10 @@ import PractitionerCard from "@/components/PractitionerCard";
 import TestimonialCarousel from "@/components/TestimonialCarousel";
 import ArticleCard from "@/components/ArticleCard";
 import SectionHeading from "@/components/SectionHeading";
+import VideoPlaceholder from "@/components/VideoPlaceholder";
+import OrganicDivider from "@/components/svg/OrganicDivider";
+import BotanicalPattern from "@/components/svg/BotanicalPattern";
+import DandelionWatermark from "@/components/DandelionWatermark";
 import { practitioners } from "@/data/practitioners";
 import { articles } from "@/data/articles";
 
@@ -111,8 +115,22 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FEATURED PRACTITIONERS ── */}
+      {/* ── MEET HECTOR — VIDEO SECTION ── */}
       <section className="bg-earth-100 py-16 md:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            title="Meet Hector"
+            subtitle="Learn about the philosophy and passion behind Hector's Herbs — natural healing rooted in tradition and science."
+          />
+          <VideoPlaceholder />
+        </div>
+      </section>
+
+      {/* Organic wave transition */}
+      <OrganicDivider variant="wave" className="w-full h-6 text-sage-300" />
+
+      {/* ── FEATURED PRACTITIONERS ── */}
+      <section className="bg-cream py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="Meet Our Herbalists"
@@ -127,8 +145,9 @@ export default function Home() {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="bg-cream py-16 md:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-earth-100 py-16 md:py-20 overflow-hidden">
+        <DandelionWatermark position="left" size="lg" className="text-sage-300" />
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="What Our Clients Say"
             subtitle="Real stories from people who've experienced the power of personalised herbal medicine."
@@ -153,8 +172,10 @@ export default function Home() {
       </section>
 
       {/* ── NEWSLETTER CTA ── */}
-      <section className="bg-forest-800 py-16 md:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative bg-forest-800 py-16 md:py-20 overflow-hidden">
+        <BotanicalPattern className="absolute inset-0 text-white opacity-[0.03]" patternId="newsletter-pattern" />
+        <DandelionWatermark position="right" size="md" className="text-white" />
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-heading text-3xl md:text-4xl font-semibold text-white">
             Stay Rooted in Wellness
           </h2>
@@ -180,6 +201,9 @@ export default function Home() {
           </form>
           <p className="mt-3 text-xs text-sage-200/40">
             No spam, ever. Unsubscribe any time.
+          </p>
+          <p className="mt-6 text-xs text-sage-200/30 italic font-heading">
+            &ldquo;In wildness is the preservation of the world&rdquo; &mdash; Henry David Thoreau
           </p>
         </div>
       </section>

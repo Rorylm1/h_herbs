@@ -7,6 +7,7 @@
 */
 
 import Link from "next/link";
+import BotanicalBorder from "@/components/svg/BotanicalBorder";
 
 export default function PathwayCard({
   icon,
@@ -24,8 +25,12 @@ export default function PathwayCard({
   return (
     <Link
       href={href}
-      className="group block rounded-xl bg-white p-6 md:p-8 shadow-card hover:shadow-hover transition-all duration-300 border border-sage-100"
+      className="group relative block rounded-xl bg-white p-6 md:p-8 shadow-card hover:shadow-hover transition-all duration-300 border border-sage-100 overflow-hidden"
     >
+      {/* Subtle botanical corner accent */}
+      <div className="absolute -top-1 -right-1 opacity-40 group-hover:opacity-60 transition-opacity">
+        <BotanicalBorder position="top-right" className="w-16 h-16 text-sage-100" />
+      </div>
       {/* Icon circle */}
       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-sage-50 text-forest-700 group-hover:bg-sage-200 transition-colors">
         {icon}

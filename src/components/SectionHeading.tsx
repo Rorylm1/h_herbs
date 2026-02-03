@@ -2,14 +2,21 @@
   SECTION HEADING — reusable heading with optional subtitle
   and a decorative botanical divider line beneath it.
   Used at the top of each homepage section.
+
+  The divider uses the BotanicalDivider SVG component which renders
+  a central dandelion seed motif flanked by hand-drawn herb sprigs.
 */
+
+import BotanicalDivider from "@/components/svg/BotanicalDivider";
 
 export default function SectionHeading({
   title,
   subtitle,
+  dividerVariant = "simple",
 }: {
   title: string;
   subtitle?: string;
+  dividerVariant?: "simple" | "elaborate";
 }) {
   return (
     <div className="text-center mb-10 md:mb-12">
@@ -21,24 +28,9 @@ export default function SectionHeading({
           {subtitle}
         </p>
       )}
-      {/* Decorative botanical divider — a simple leaf-like SVG accent */}
-      <div className="flex items-center justify-center gap-3 mt-5">
-        <span className="h-px w-12 bg-sage-300" />
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          className="text-sage-300"
-        >
-          <path
-            d="M12 3C12 3 7 8 7 13C7 15.76 9.24 18 12 18C14.76 18 17 15.76 17 13C17 8 12 3 12 3Z"
-            fill="currentColor"
-            opacity="0.6"
-          />
-          <path d="M12 18V21" stroke="currentColor" strokeWidth="1.5" />
-        </svg>
-        <span className="h-px w-12 bg-sage-300" />
+      {/* Decorative botanical divider — dandelion seed motif with herb sprigs */}
+      <div className="flex items-center justify-center mt-5">
+        <BotanicalDivider variant={dividerVariant} className="w-48 md:w-56 text-sage-300" />
       </div>
     </div>
   );

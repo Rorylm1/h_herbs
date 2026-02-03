@@ -122,7 +122,66 @@ _(tasks to be detailed when M5 is complete)_
 
 ---
 
-# Milestone 7: Database, Auth & Image Storage (Post-V1)
+# Milestone 7: Visual Design Enhancement ✅
+
+## SVG Assets (src/components/svg/)
+- [x] Create `DandelionLogo` SVG component (full + icon variants)
+- [x] Create `BotanicalDivider` SVG component (simple + elaborate variants)
+- [x] Create `BotanicalBorder` SVG component (4 corner positions via CSS transform)
+- [x] Create `BotanicalPattern` SVG component (repeatable tile background)
+- [x] Create `OrganicDivider` SVG component (wave, leaf-vine, seeds variants)
+- [x] Create `HerbIllustration` SVG component (chamomile, elderberry, nettle, dandelion, lavender, echinacea)
+- [x] Create `QuoteLeaf` SVG component (quote mark with botanical accent)
+
+## New Shared Components
+- [x] Build `DandelionWatermark` — positioned low-opacity background motif
+- [x] Build `VideoPlaceholder` — homepage video section with poster image and play button
+- [x] Build `LatinName` — italic serif typography utility for Latin botanical names
+
+## CSS Theme Additions
+- [x] Add botanical colour tokens and utility classes to `globals.css`
+
+## Layout Enhancements
+- [x] Update `SiteHeader` — add dandelion icon next to text logo
+- [x] Update `SiteFooter` — add dandelion icon, botanical pattern background, watermark, Hippocrates quote
+- [x] Update `SectionHeading` — replace simple leaf divider with `BotanicalDivider`
+
+## Homepage Enhancements
+- [x] Update `HeroBanner` — richer botanical pattern overlay, corner borders, watermark, organic transition
+- [x] Add `VideoPlaceholder` section to homepage (between pathways and practitioners)
+- [x] Add `OrganicDivider` transitions between homepage sections
+- [x] Update `TestimonialCarousel` — `QuoteLeaf`, botanical borders, background treatment
+- [x] Update `PathwayCard` — botanical corner accents
+- [x] Update newsletter CTA — botanical pattern, watermark, Thoreau quote
+
+## Practitioner Enhancements
+- [x] Update `PractitionerCard` — botanical corner accent on photo
+- [x] Update `PractitionerHero` — botanical pattern background, border accents, watermark
+- [x] Update `/herbalists` directory page — enriched hero, organic divider, watermark
+- [x] Update `/herbalists/[slug]` profile page — organic dividers between sections
+- [x] Update `ReviewCard` — botanical corner accent, `QuoteLeaf`
+
+## Shop Enhancements
+- [x] Add `latinName` field to `Product` type and populate for all 12 products
+- [x] Update product Unsplash image URLs (unique per product)
+- [x] Update `ProductCard` — display Latin name, botanical accent
+- [x] Update `/shop/[slug]` product detail page — Latin name display, botanical borders
+- [x] Update `ShopContent` — enriched hero, watermark, organic divider
+
+## Booking & Remaining Pages
+- [x] Update `BookingStepper` — organic vine connectors, leaf accents
+- [x] Update `BookingFlow` Step 5 — watermark, botanical borders on confirmation
+- [x] Update `/checkout/success` — watermark, botanical accents
+- [x] Update cart page — watermark on empty state, botanical accents on checkout card
+- [x] Update `ArticleCard` — botanical corner accent
+- [x] Update `ComingSoon` — dandelion logo replacing leaf, botanical pattern
+
+## Git & Deploy
+- [x] Git commit + push (Vercel auto-deploys)
+
+---
+
+# Milestone 8: Database, Auth & Image Storage (Post-V1)
 
 ## Database
 - [ ] Choose and set up hosted Postgres (Vercel Postgres / Supabase / Neon)
@@ -151,7 +210,7 @@ _(tasks to be detailed when M5 is complete)_
 
 ---
 
-# Milestone 8: Google Calendar OAuth Integration (Post-V1)
+# Milestone 9: Google Calendar OAuth Integration (Post-V1)
 
 ## Google Cloud Setup
 - [ ] Create Google Cloud project and enable Calendar API
