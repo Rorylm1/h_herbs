@@ -107,8 +107,35 @@
 
 ---
 
-# Milestone 4: Learn + Contact
-_(tasks to be detailed when M3 is complete)_
+# Milestone 4: Learn + Contact ✅
+
+## Learn Hub Page
+- [x] Build `LearnContent` client component — category filter tabs, article grid, hero section
+- [x] Update `/learn` page — replace ComingSoon with metadata + LearnContent
+
+## Article Detail Page
+- [x] Build `/learn/[slug]` page — SSG with `generateStaticParams`, dynamic metadata
+- [x] Build article hero — featured image with gradient overlay, breadcrumb, category badge, title, author, date
+- [x] Build article content renderer — handles `##` headings, `###` subheadings, `**bold**`, paragraphs
+- [x] Build author practitioner card — photo, name, title, link to `/herbalists/[slug]`
+- [x] Build related articles section — same category, max 3, reuses ArticleCard
+
+## Contact Page
+- [x] Build `ContactContent` client component — form + contact info + map
+- [x] Update `/contact` page — replace ComingSoon with metadata + ContactContent
+- [x] Build contact form — name, email, phone, subject dropdown, message, mock submission with success state
+- [x] Build contact details card — address, email link, Instagram link
+- [x] Build Google Maps embed — iframe for 12 Warrington Crescent
+- [x] Build opening hours card
+
+## Cross-Links & Polish
+- [x] Verify homepage article cards link to working `/learn/[slug]` pages
+- [x] Verify practitioner "Articles by" sections link to working article pages
+- [x] Verify article author cards link to correct practitioner profiles
+- [x] Mobile responsive pass on all new pages
+
+## Git & Deploy
+- [ ] Git commit + push (Vercel auto-deploys)
 
 ---
 
