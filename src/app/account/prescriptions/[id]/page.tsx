@@ -4,6 +4,8 @@ import PrescriptionDetail from "@/components/PrescriptionDetail";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 
+export const dynamic = 'force-dynamic';
+
 type PrescriptionItem = {
   herb: string;
   productSlug?: string;

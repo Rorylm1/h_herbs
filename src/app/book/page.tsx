@@ -20,6 +20,8 @@ export const metadata = {
     "Book a consultation with one of our qualified naturopathic herbalists. Choose your practitioner, service, and preferred time.",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function BookingPage() {
   const practitioners = await prisma.practitioner.findMany({
     select: {

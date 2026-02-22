@@ -16,6 +16,8 @@ export const metadata = {
     "Browse our range of quality herbal remedies — tinctures, teas, capsules, and dried herbs. Handpicked and recommended by our practitioners.",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function ShopPage() {
   const products = (await prisma.product.findMany()) as unknown as Product[];
   return <ShopContent products={products} />;

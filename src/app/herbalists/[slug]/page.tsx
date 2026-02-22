@@ -21,6 +21,8 @@ import CertificationsBadges from "@/components/CertificationsBadges";
 import ArticleCard from "@/components/ArticleCard";
 import SectionHeading from "@/components/SectionHeading";
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({
   params,
 }: {
@@ -193,7 +195,7 @@ export default async function PractitionerProfilePage({
       </section>
 
       {/* ── CLIENT REVIEWS ── */}
-      {practitioner.reviews.length > 0 && (
+      {practitioner.reviews && practitioner.reviews.length > 0 && (
         <section className="bg-cream py-12 md:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <SectionHeading

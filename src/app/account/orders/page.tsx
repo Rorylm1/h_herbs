@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "View your order history from the Hector's Herbs shop.",
 };
 
+export const dynamic = 'force-dynamic';
+
 type OrderItem = {
   productSlug: string;
   name: string;

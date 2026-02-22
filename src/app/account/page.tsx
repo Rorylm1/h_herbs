@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "Manage your bookings, prescriptions, and orders at Hector's Herbs.",
 };
 
+export const dynamic = 'force-dynamic';
+
 type PrescriptionItem = {
   herb: string;
   productSlug?: string;

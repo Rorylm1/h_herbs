@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "View and manage your consultation appointments at Hector's Herbs.",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function BookingsPage() {
   const bookingsRaw = await prisma.booking.findMany({
     include: {

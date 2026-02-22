@@ -19,6 +19,8 @@ export const metadata = {
     "Meet our team of qualified naturopathic herbalists. Each practitioner brings unique expertise to help you on your health journey.",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function HerbalistsPage() {
   const practitioners = (await prisma.practitioner.findMany()) as unknown as Practitioner[];
   return (

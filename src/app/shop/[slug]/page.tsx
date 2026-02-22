@@ -14,6 +14,8 @@ import ProductCard from "@/components/ProductCard";
 import type { Product } from "@/types";
 import LatinName from "@/components/LatinName";
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({
   params,
 }: {

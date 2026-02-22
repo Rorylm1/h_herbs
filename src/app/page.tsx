@@ -27,6 +27,8 @@ import DandelionWatermark from "@/components/DandelionWatermark";
 import type { Practitioner } from "@/types";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const [dbPractitioners, dbArticles, dbTestimonials] = await Promise.all([
     prisma.practitioner.findMany({ take: 3 }),

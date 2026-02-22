@@ -16,6 +16,8 @@ import SectionHeading from "@/components/SectionHeading";
 import BotanicalBorder from "@/components/svg/BotanicalBorder";
 import DandelionWatermark from "@/components/DandelionWatermark";
 
+export const dynamic = 'force-dynamic';
+
 /* ── Content parser ─────────────────────────────────────────
    Splits the article content string into structured blocks
    (headings, subheadings, paragraphs) and handles **bold**

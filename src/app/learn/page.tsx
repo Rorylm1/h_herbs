@@ -15,6 +15,8 @@ export const metadata = {
     "Expert articles on herbal medicine, nutrition, holistic living, and seasonal wellness from our team of qualified practitioners.",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function LearnPage() {
   const dbArticles = await prisma.article.findMany({
     orderBy: { publishedDate: "desc" },

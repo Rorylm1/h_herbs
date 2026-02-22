@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "View your herbal prescriptions from consultations at Hector's Herbs.",
 };
 
+export const dynamic = 'force-dynamic';
+
 type PrescriptionItem = {
   herb: string;
   productSlug?: string;
