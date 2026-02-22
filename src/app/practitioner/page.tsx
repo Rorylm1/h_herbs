@@ -62,26 +62,11 @@ export default function PractitionerDashboard() {
     if (isPractitioner) fetchDashboardData();
   }, [isPractitioner, fetchDashboardData]);
 
-  if (status === "loading") {
-    return null;
-  }
-
-  if (!isPractitioner) {
+  if (status === "loading" || !isPractitioner) {
     return (
       <section className="bg-cream py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-heading text-3xl font-semibold text-forest-700 mb-4">
-            Practitioner Access Required
-          </h1>
-          <p className="text-muted mb-6">
-            You need to be signed in as a practitioner to view this page.
-          </p>
-          <Link
-            href="/login"
-            className="inline-block bg-forest-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-forest-800 transition-colors"
-          >
-            Sign In
-          </Link>
+          <div className="animate-pulse text-muted">Loading dashboard...</div>
         </div>
       </section>
     );
