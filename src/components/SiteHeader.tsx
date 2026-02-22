@@ -11,6 +11,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import DandelionLogo from "@/components/svg/DandelionLogo";
 
 const navLinks = [
@@ -24,6 +25,7 @@ const navLinks = [
 export default function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { totalItems } = useCart();
+  const { isLoggedIn, isClient, isPractitioner, user } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-cream/95 backdrop-blur-sm border-b border-sage-200/50">
@@ -80,27 +82,40 @@ export default function SiteHeader() {
               )}
             </Link>
 
-            {/* Account icon */}
-            <Link
-              href="/login"
-              className="hidden sm:block text-charcoal hover:text-forest-700 transition-colors"
-              aria-label="Account"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-6 w-6"
+            {/* Account icon / User name */}
+            {isLoggedIn ? (
+              <Link
+                href={isPractitioner ? "/practitioner" : "/account"}
+                className="hidden sm:flex items-center gap-2 text-charcoal hover:text-forest-700 transition-colors"
+                aria-label="My Account"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                />
-              </svg>
-            </Link>
+                <span className="text-sm font-medium">{user?.name.split(" ")[0]}</span>
+                <div className="w-8 h-8 rounded-full bg-forest-700 flex items-center justify-center text-white text-sm font-semibold">
+                  {user?.name.charAt(0)}
+                </div>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="hidden sm:block text-charcoal hover:text-forest-700 transition-colors"
+                aria-label="Sign In"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                  />
+                </svg>
+              </Link>
+            )}
 
             {/* Mobile hamburger button — shown on small screens only */}
             <button
@@ -147,13 +162,26 @@ export default function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className="block py-2 px-2 font-body text-base text-charcoal hover:bg-sage-50 hover:text-forest-700 rounded-md transition-colors"
-            >
-              My Account
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href={isPractitioner ? "/practitioner" : "/account"}
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 py-2 px-2 font-body text-base text-charcoal hover:bg-sage-50 hover:text-forest-700 rounded-md transition-colors"
+              >
+                <div className="w-6 h-6 rounded-full bg-forest-700 flex items-center justify-center text-white text-xs font-semibold">
+                  {user?.name.charAt(0)}
+                </div>
+                {user?.name.split(" ")[0]}&apos;s Account
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                className="block py-2 px-2 font-body text-base text-charcoal hover:bg-sage-50 hover:text-forest-700 rounded-md transition-colors"
+              >
+                Sign In
+              </Link>
+            )}
           </nav>
         )}
       </div>

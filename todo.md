@@ -135,16 +135,80 @@
 - [x] Mobile responsive pass on all new pages
 
 ## Git & Deploy
+- [x] Git commit + push (Vercel auto-deploys)
+
+---
+
+# Milestone 5: Client Account Area ✅
+
+## Authentication System (Simulated)
+- [x] Build `AuthContext` — simulated auth with three roles (logged-out, client, practitioner), localStorage persistence
+- [x] Build `AuthProvider` — wraps app with auth state, provides login/logout/cycleRole helpers
+- [x] Build `AuthToggle` — floating dev toggle (bottom-right corner) to cycle between auth states
+- [x] Update `Providers` component — add `AuthProvider` and `AuthToggle` to provider stack
+- [x] Build `useAuth` custom hook — typed access to auth state from any component
+
+## Login Page
+- [x] Build `LoginContent` component — mock login form with role selector (Client / Practitioner)
+- [x] Build `/login` page with metadata
+- [x] Role selector buttons (Client / Practitioner) with visual active state
+- [x] Email and password fields (mock — no validation required)
+- [x] "Already signed in" state with redirect to dashboard
+- [x] Botanical design treatment (patterns, borders, watermark, dandelion logo)
+
+## Account Dashboard
+- [x] Build `AccountDashboard` component — overview page with welcome message, quick stats, summary cards
+- [x] Build `AccountSidebar` component — navigation for account area (desktop sidebar + mobile tab bar)
+- [x] Build `/account` page with metadata
+- [x] Quick stats: upcoming bookings count, prescriptions count, orders count
+- [x] Next booking summary card with practitioner name and date
+- [x] Latest prescription summary card
+- [x] Recent order summary card with status badge
+- [x] Auth guard — redirects to sign-in prompt if not logged in as client
+- [x] Sign Out button in page hero
+
+## Bookings Page
+- [x] Build `BookingsContent` component — filterable list of bookings
+- [x] Build `BookingCard` component — booking card with practitioner, service, date/time, status
+- [x] Build `/account/bookings` page
+- [x] Filter tabs: Upcoming, Past, All (with counts)
+- [x] Empty state with "Book a Consultation" CTA
+
+## Prescriptions Pages
+- [x] Build `PrescriptionsContent` component — list of prescriptions sorted by date
+- [x] Build `PrescriptionCard` component — summary card with condition, practitioner, herb count
+- [x] Build `/account/prescriptions` page
+- [x] Info banner explaining "Order These Herbs" feature
+- [x] Build `PrescriptionDetail` component — full prescription view with herbs table, dosages, practitioner notes
+- [x] Build `/account/prescriptions/[id]` page with `generateStaticParams` and dynamic metadata
+- [x] Herbs table: herb name, form, dosage, duration, shop link with price
+- [x] Practitioner card with photo and link to profile
+- [x] "Order These Herbs" CTA — adds all available shop products to cart via CartContext
+- [x] Breadcrumb navigation
+
+## Orders Page
+- [x] Build `OrdersContent` component — order history with stats
+- [x] Build `OrderCard` component — order card with items, total, status badge, tracking number
+- [x] Build `/account/orders` page
+- [x] Quick stats: total orders, delivered count, total spent
+- [x] Status badges (processing, shipped, delivered) with colour coding
+
+## Mock Data
+- [x] Create `data/bookings.ts` — 5 mock bookings with helper functions (getUpcomingBookings, getPastBookings)
+- [x] Create `data/orders.ts` — 4 mock orders with helper functions (getOrdersSorted, getOrdersByStatus)
+- [x] Create `data/prescriptions.ts` — 3 mock prescriptions with herb items linked to shop products
+
+## Header & Cross-Links
+- [x] Update `SiteHeader` — show user name and avatar when logged in, link to account/practitioner portal
+- [x] Mobile nav shows account link when logged in
+- [x] All account pages include AccountSidebar with active state highlighting
+
+## Git & Deploy
 - [ ] Git commit + push (Vercel auto-deploys)
 
 ---
 
-# Milestone 5: Client Account Area
-_(tasks to be detailed when M4 is complete)_
-
----
-
-# Milestone 6: Practitioner Portal
+# Milestone 6: Practitioner Portal + Database
 _(tasks to be detailed when M5 is complete)_
 
 ---

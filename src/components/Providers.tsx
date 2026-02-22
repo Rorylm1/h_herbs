@@ -12,8 +12,18 @@
 */
 
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
+import AuthToggle from "@/components/AuthToggle";
 import type { ReactNode } from "react";
 
 export default function Providers({ children }: { children: ReactNode }) {
-  return <CartProvider>{children}</CartProvider>;
+  return (
+    <AuthProvider>
+      <CartProvider>
+        {children}
+        {/* Floating dev toggle for simulating auth states */}
+        <AuthToggle />
+      </CartProvider>
+    </AuthProvider>
+  );
 }
