@@ -8,16 +8,32 @@
 */
 
 import Link from "next/link";
-import { type Booking } from "@/data/bookings";
-import { practitioners } from "@/data/practitioners";
 import AddToCalendarLink from "@/components/AddToCalendarLink";
 
+type BookingPractitioner = {
+  slug: string;
+  name: string;
+  photo: string;
+  title: string;
+};
+
+type BookingData = {
+  id: string;
+  practitionerSlug: string;
+  service: string;
+  date: string;
+  time: string;
+  status: "upcoming" | "completed" | "cancelled";
+  notes: string | null;
+  practitioner: BookingPractitioner;
+};
+
 type BookingCardProps = {
-  booking: Booking;
+  booking: BookingData;
 };
 
 export default function BookingCard({ booking }: BookingCardProps) {
-  const practitioner = practitioners.find((p) => p.slug === booking.practitionerSlug);
+  const practitioner = booking.practitioner;
 
   // Format date for display
   const dateObj = new Date(booking.date);

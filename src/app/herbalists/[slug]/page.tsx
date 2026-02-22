@@ -5,18 +5,14 @@
   is variable. Visiting /herbalists/hector passes { slug: "hector" }
   as a param. We look up the matching practitioner from our data.
 
-  generateStaticParams() tells Next.js to pre-build a page for
-  each practitioner at build time (Static Site Generation). This
-  means the pages load instantly — no server processing needed.
-
-  This is the "hub page" — the richest page on the site where
-  clients build trust before booking.
+  Pages are rendered on-demand (not at build time) since data
+  lives in the database and can change at any time.
 */
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import type { Certification, Service, Practitioner } from "@/data/practitioners";
+import type { Certification, Service, Practitioner } from "@/types";
 import PractitionerHero from "@/components/PractitionerHero";
 import ServicesTable from "@/components/ServicesTable";
 import ReviewCard from "@/components/ReviewCard";
@@ -24,13 +20,6 @@ import AvailabilityPreview from "@/components/AvailabilityPreview";
 import CertificationsBadges from "@/components/CertificationsBadges";
 import ArticleCard from "@/components/ArticleCard";
 import SectionHeading from "@/components/SectionHeading";
-
-export async function generateStaticParams() {
-  const practitioners = await prisma.practitioner.findMany({
-    select: { slug: true },
-  });
-  return practitioners.map((p) => ({ slug: p.slug }));
-}
 
 export async function generateMetadata({
   params,

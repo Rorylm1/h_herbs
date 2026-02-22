@@ -6,7 +6,7 @@
   homepage, plus a hero banner at the top.
 */
 
-import type { Practitioner } from "@/data/practitioners";
+import type { Practitioner } from "@/types";
 import { prisma } from "@/lib/prisma";
 import PractitionerCard from "@/components/PractitionerCard";
 import SectionHeading from "@/components/SectionHeading";

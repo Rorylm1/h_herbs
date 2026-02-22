@@ -10,23 +10,21 @@
   handles all database queries.
 */
 
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  errorResponse,
+  withErrorHandler,
+} from "@/lib/api-helpers";
 
-export async function GET() {
-  try {
+export function GET() {
+  return withErrorHandler(async () => {
     const products = await prisma.product.findMany({
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(products);
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch products" },
-      { status: 500 }
-    );
-  }
+    return successResponse(products);
+  });
 }
 
 const REQUIRED_FIELDS = [
@@ -41,15 +39,15 @@ const REQUIRED_FIELDS = [
   "usage",
 ] as const;
 
-export async function POST(request: Request) {
-  try {
+export function POST(request: Request) {
+  return withErrorHandler(async () => {
     const body = await request.json();
 
     const missing = REQUIRED_FIELDS.filter((field) => !body[field]);
     if (missing.length > 0) {
-      return NextResponse.json(
-        { error: `Missing required fields: ${missing.join(", ")}` },
-        { status: 400 }
+      return errorResponse(
+        `Missing required fields: ${missing.join(", ")}`,
+        400,
       );
     }
 
@@ -70,23 +68,6 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(product, { status: 201 });
-  } catch (error) {
-    console.error("Failed to create product:", error);
-
-    if (
-      error instanceof Error &&
-      error.message.includes("Unique constraint")
-    ) {
-      return NextResponse.json(
-        { error: "A product with this slug already exists" },
-        { status: 409 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: "Failed to create product" },
-      { status: 500 }
-    );
-  }
+    return successResponse(product, 201);
+  });
 }

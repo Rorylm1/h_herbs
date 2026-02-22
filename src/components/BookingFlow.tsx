@@ -23,12 +23,31 @@ import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { practitioners } from "@/data/practitioners";
 import BookingStepper from "./BookingStepper";
 import AddToCalendarLink from "./AddToCalendarLink";
 import BotanicalBorder from "@/components/svg/BotanicalBorder";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
+
+type PractitionerService = {
+  name: string;
+  duration: string;
+  price: number;
+  description: string;
+};
+
+type BookingPractitioner = {
+  slug: string;
+  name: string;
+  title: string;
+  photo: string;
+  specialities: string[];
+  services: PractitionerService[];
+};
+
+type BookingFlowProps = {
+  practitioners: BookingPractitioner[];
+};
 
 /* ── Helper: parse "60 minutes" → 60 ── */
 function parseDuration(duration: string): number {
@@ -73,7 +92,7 @@ const timeSlots = [
 
 const LOCATION = "12 Warrington Crescent, London, W9 1EL";
 
-export default function BookingFlow() {
+export default function BookingFlow({ practitioners }: BookingFlowProps) {
   const searchParams = useSearchParams();
   const preselectedPractitioner = searchParams.get("practitioner");
   const preselectedService = searchParams.get("service");

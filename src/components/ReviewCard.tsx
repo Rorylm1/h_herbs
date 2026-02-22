@@ -6,7 +6,7 @@
   our dummy data uses whole numbers for simplicity.
 */
 
-import type { Review } from "@/data/practitioners";
+import type { Review } from "@/types";
 import QuoteLeaf from "@/components/svg/QuoteLeaf";
 
 function StarRating({ rating }: { rating: number }) {

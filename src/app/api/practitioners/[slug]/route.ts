@@ -5,45 +5,47 @@
   PUT  → Update a practitioner's profile fields
 */
 
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  errorResponse,
+  withErrorHandler,
+} from "@/lib/api-helpers";
 
-export async function GET(
+export function GET(
   _request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug } = await params;
+  return withErrorHandler(async () => {
+    const { slug } = await params;
 
-  try {
     const practitioner = await prisma.practitioner.findUnique({
       where: { slug },
     });
 
     if (!practitioner) {
-      return NextResponse.json(
-        { error: "Practitioner not found" },
-        { status: 404 }
-      );
+      return errorResponse("Practitioner not found", 404);
     }
 
-    return NextResponse.json(practitioner);
-  } catch (error) {
-    console.error("Failed to fetch practitioner:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch practitioner" },
-      { status: 500 }
-    );
-  }
+    return successResponse(practitioner);
+  });
 }
 
-export async function PUT(
+export function PUT(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug } = await params;
-
-  try {
+  return withErrorHandler(async () => {
+    const { slug } = await params;
     const body = await request.json();
+
+    const existing = await prisma.practitioner.findUnique({
+      where: { slug },
+    });
+
+    if (!existing) {
+      return errorResponse("Practitioner not found", 404);
+    }
 
     const updatable = {
       name: body.name,
@@ -61,7 +63,7 @@ export async function PUT(
 
     // Remove undefined fields so Prisma only updates what's provided
     const data = Object.fromEntries(
-      Object.entries(updatable).filter(([, v]) => v !== undefined)
+      Object.entries(updatable).filter(([, v]) => v !== undefined),
     );
 
     const practitioner = await prisma.practitioner.update({
@@ -69,12 +71,6 @@ export async function PUT(
       data,
     });
 
-    return NextResponse.json(practitioner);
-  } catch (error) {
-    console.error("Failed to update practitioner:", error);
-    return NextResponse.json(
-      { error: "Failed to update practitioner" },
-      { status: 500 }
-    );
-  }
+    return successResponse(practitioner);
+  });
 }

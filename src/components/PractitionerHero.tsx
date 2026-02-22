@@ -9,7 +9,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { Practitioner } from "@/data/practitioners";
+import type { Practitioner } from "@/types";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 
 export default function PractitionerHero({

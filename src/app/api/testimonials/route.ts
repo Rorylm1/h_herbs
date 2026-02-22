@@ -1,32 +1,30 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  errorResponse,
+  withErrorHandler,
+} from "@/lib/api-helpers";
 
-export async function GET() {
-  try {
+export function GET() {
+  return withErrorHandler(async () => {
     const testimonials = await prisma.testimonial.findMany({
       where: { practitionerSlug: "hector" },
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(testimonials);
-  } catch (error) {
-    console.error("Error fetching testimonials:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch testimonials" },
-      { status: 500 }
-    );
-  }
+    return successResponse(testimonials);
+  });
 }
 
-export async function POST(request: Request) {
-  try {
+export function POST(request: Request) {
+  return withErrorHandler(async () => {
     const body = await request.json();
     const { clientName, text, condition } = body;
 
     if (!clientName || !text || !condition) {
-      return NextResponse.json(
-        { error: "clientName, text, and condition are required" },
-        { status: 400 }
+      return errorResponse(
+        "clientName, text, and condition are required",
+        400,
       );
     }
 
@@ -39,12 +37,6 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(testimonial, { status: 201 });
-  } catch (error) {
-    console.error("Error creating testimonial:", error);
-    return NextResponse.json(
-      { error: "Failed to create testimonial" },
-      { status: 500 }
-    );
-  }
+    return successResponse(testimonial, 201);
+  });
 }

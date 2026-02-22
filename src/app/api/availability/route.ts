@@ -5,34 +5,29 @@
   PUT → Bulk upsert availability for all 7 days of the week
 */
 
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  errorResponse,
+  withErrorHandler,
+} from "@/lib/api-helpers";
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const practitionerSlug = searchParams.get("practitionerSlug");
+export function GET(request: Request) {
+  return withErrorHandler(async () => {
+    const { searchParams } = new URL(request.url);
+    const practitionerSlug = searchParams.get("practitionerSlug");
 
-  if (!practitionerSlug) {
-    return NextResponse.json(
-      { error: "practitionerSlug is required" },
-      { status: 400 }
-    );
-  }
+    if (!practitionerSlug) {
+      return errorResponse("practitionerSlug is required", 400);
+    }
 
-  try {
     const availability = await prisma.availability.findMany({
       where: { practitionerSlug },
       orderBy: { dayOfWeek: "asc" },
     });
 
-    return NextResponse.json(availability);
-  } catch (error) {
-    console.error("Failed to fetch availability:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch availability" },
-      { status: 500 }
-    );
-  }
+    return successResponse(availability);
+  });
 }
 
 type AvailabilitySlot = {
@@ -42,18 +37,15 @@ type AvailabilitySlot = {
   isAvailable: boolean;
 };
 
-export async function PUT(request: Request) {
-  try {
+export function PUT(request: Request) {
+  return withErrorHandler(async () => {
     const { practitionerSlug, slots } = (await request.json()) as {
       practitionerSlug: string;
       slots: AvailabilitySlot[];
     };
 
     if (!practitionerSlug || !slots) {
-      return NextResponse.json(
-        { error: "practitionerSlug and slots are required" },
-        { status: 400 }
-      );
+      return errorResponse("practitionerSlug and slots are required", 400);
     }
 
     // Upsert each day's availability in a transaction
@@ -78,16 +70,10 @@ export async function PUT(request: Request) {
             endTime: slot.endTime,
             isAvailable: slot.isAvailable,
           },
-        })
-      )
+        }),
+      ),
     );
 
-    return NextResponse.json(results);
-  } catch (error) {
-    console.error("Failed to update availability:", error);
-    return NextResponse.json(
-      { error: "Failed to update availability" },
-      { status: 500 }
-    );
-  }
+    return successResponse(results);
+  });
 }

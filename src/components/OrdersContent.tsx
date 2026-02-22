@@ -12,11 +12,29 @@ import AccountSidebar from "@/components/AccountSidebar";
 import OrderCard from "@/components/OrderCard";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
-import { getOrdersSorted } from "@/data/orders";
 
-export default function OrdersContent() {
+type OrderItem = {
+  productSlug: string;
+  name: string;
+  quantity: number;
+  price: number;
+};
+
+type Order = {
+  id: string;
+  date: string;
+  status: "processing" | "shipped" | "delivered";
+  items: OrderItem[];
+  total: number;
+  trackingNumber?: string | null;
+};
+
+type OrdersContentProps = {
+  orders: Order[];
+};
+
+export default function OrdersContent({ orders }: OrdersContentProps) {
   const { isClient } = useAuth();
-  const orders = getOrdersSorted();
 
   // Redirect if not logged in as client
   if (!isClient) {

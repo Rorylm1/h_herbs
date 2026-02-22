@@ -9,7 +9,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { Practitioner } from "@/data/practitioners";
+import type { Practitioner } from "@/types";
 import BotanicalBorder from "@/components/svg/BotanicalBorder";
 
 export default function PractitionerCard({

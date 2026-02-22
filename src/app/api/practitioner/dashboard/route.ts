@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { successResponse, withErrorHandler } from "@/lib/api-helpers";
 
-export async function GET() {
-  try {
+export function GET() {
+  return withErrorHandler(async () => {
     const [products, upcomingBookings, publishedArticles, testimonials, nextBookings] =
       await Promise.all([
         prisma.product.count(),
@@ -22,7 +22,7 @@ export async function GET() {
         }),
       ]);
 
-    return NextResponse.json({
+    return successResponse({
       stats: {
         products,
         upcomingBookings,
@@ -31,11 +31,5 @@ export async function GET() {
       },
       upcomingBookings: nextBookings,
     });
-  } catch (error) {
-    console.error("Error fetching dashboard data:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch dashboard data" },
-      { status: 500 }
-    );
-  }
+  });
 }

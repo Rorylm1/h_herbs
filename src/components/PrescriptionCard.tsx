@@ -6,15 +6,30 @@
 */
 
 import Link from "next/link";
-import { type Prescription } from "@/data/prescriptions";
-import { practitioners } from "@/data/practitioners";
+
+type PrescriptionItem = {
+  herb: string;
+  productSlug?: string;
+  form: string;
+  dosage: string;
+  duration: string;
+};
+
+type PrescriptionData = {
+  id: string;
+  practitionerSlug: string;
+  date: string;
+  condition: string;
+  notes: string;
+  items: PrescriptionItem[];
+  practitionerName: string;
+};
 
 type PrescriptionCardProps = {
-  prescription: Prescription;
+  prescription: PrescriptionData;
 };
 
 export default function PrescriptionCard({ prescription }: PrescriptionCardProps) {
-  const practitioner = practitioners.find((p) => p.slug === prescription.practitionerSlug);
 
   // Format date for display
   const formattedDate = new Date(prescription.date).toLocaleDateString("en-GB", {
@@ -55,9 +70,9 @@ export default function PrescriptionCard({ prescription }: PrescriptionCardProps
             {prescription.condition}
           </h3>
 
-          {practitioner && (
+          {prescription.practitionerName && (
             <p className="text-charcoal text-sm mt-0.5">
-              Prescribed by {practitioner.name}
+              Prescribed by {prescription.practitionerName}
             </p>
           )}
 

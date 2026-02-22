@@ -18,7 +18,11 @@
   so the app degrades gracefully during development.
 */
 
-import { NextResponse } from "next/server";
+import {
+  successResponse,
+  errorResponse,
+  withErrorHandler,
+} from "@/lib/api-helpers";
 
 type CartItem = {
   slug: string;
@@ -28,20 +32,17 @@ type CartItem = {
   quantity: number;
 };
 
-export async function POST(request: Request) {
-  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+export function POST(request: Request) {
+  return withErrorHandler(async () => {
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
-  if (!stripeSecretKey) {
-    return NextResponse.json(
-      {
-        error:
-          "Stripe is not configured. Add STRIPE_SECRET_KEY to your environment variables to enable checkout.",
-      },
-      { status: 500 }
-    );
-  }
+    if (!stripeSecretKey) {
+      return errorResponse(
+        "Stripe is not configured. Add STRIPE_SECRET_KEY to your environment variables to enable checkout.",
+        500,
+      );
+    }
 
-  try {
     /*
       Dynamic import — we import Stripe only when the route is called,
       not at module load time. This avoids errors if the stripe package
@@ -53,10 +54,7 @@ export async function POST(request: Request) {
     const { items }: { items: CartItem[] } = await request.json();
 
     if (!items || items.length === 0) {
-      return NextResponse.json(
-        { error: "Cart is empty" },
-        { status: 400 }
-      );
+      return errorResponse("Cart is empty", 400);
     }
 
     const origin = request.headers.get("origin") || "http://localhost:3000";
@@ -84,12 +82,6 @@ export async function POST(request: Request) {
       cancel_url: `${origin}/cart`,
     });
 
-    return NextResponse.json({ url: session.url });
-  } catch (error) {
-    console.error("Stripe checkout error:", error);
-    return NextResponse.json(
-      { error: "Failed to create checkout session. Please try again." },
-      { status: 500 }
-    );
-  }
+    return successResponse({ url: session.url });
+  });
 }

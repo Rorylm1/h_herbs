@@ -1,14 +1,8 @@
 /*
   PRODUCT DETAIL PAGE — /shop/[slug]
 
-  ARCHITECTURE TIP: Like the practitioner profile, this uses
-  generateStaticParams() for Static Site Generation — Next.js
-  pre-builds a page for each product at build time. The page
-  itself is a server component (fast, SEO-friendly), with just
-  the "Add to Basket" button extracted as a client component.
-
-  The "Recommended by" badge links to the recommending practitioner's
-  profile, creating a cross-linking web between shop and herbalists.
+  Server component with the "Add to Basket" button extracted as a
+  client component. Rendered on-demand since data lives in the database.
 */
 
 import { notFound } from "next/navigation";
@@ -17,13 +11,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import AddToBasketButton from "@/components/AddToBasketButton";
 import ProductCard from "@/components/ProductCard";
-import type { Product } from "@/data/products";
+import type { Product } from "@/types";
 import LatinName from "@/components/LatinName";
-
-export async function generateStaticParams() {
-  const products = await prisma.product.findMany({ select: { slug: true } });
-  return products.map((p) => ({ slug: p.slug }));
-}
 
 export async function generateMetadata({
   params,

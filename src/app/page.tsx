@@ -24,7 +24,7 @@ import VideoPlaceholder from "@/components/VideoPlaceholder";
 import OrganicDivider from "@/components/svg/OrganicDivider";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
-import type { Practitioner } from "@/data/practitioners";
+import type { Practitioner } from "@/types";
 import { prisma } from "@/lib/prisma";
 
 export default async function Home() {

@@ -6,45 +6,47 @@
   DELETE → Delete an article
 */
 
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  errorResponse,
+  withErrorHandler,
+} from "@/lib/api-helpers";
 
-export async function GET(
+export function GET(
   _request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug } = await params;
+  return withErrorHandler(async () => {
+    const { slug } = await params;
 
-  try {
     const article = await prisma.article.findUnique({
       where: { slug },
     });
 
     if (!article) {
-      return NextResponse.json(
-        { error: "Article not found" },
-        { status: 404 }
-      );
+      return errorResponse("Article not found", 404);
     }
 
-    return NextResponse.json(article);
-  } catch (error) {
-    console.error("Failed to fetch article:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch article" },
-      { status: 500 }
-    );
-  }
+    return successResponse(article);
+  });
 }
 
-export async function PUT(
+export function PUT(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug } = await params;
-
-  try {
+  return withErrorHandler(async () => {
+    const { slug } = await params;
     const body = await request.json();
+
+    const existing = await prisma.article.findUnique({
+      where: { slug },
+    });
+
+    if (!existing) {
+      return errorResponse("Article not found", 404);
+    }
 
     const article = await prisma.article.update({
       where: { slug },
@@ -61,33 +63,29 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(article);
-  } catch (error) {
-    console.error("Failed to update article:", error);
-    return NextResponse.json(
-      { error: "Failed to update article" },
-      { status: 500 }
-    );
-  }
+    return successResponse(article);
+  });
 }
 
-export async function DELETE(
+export function DELETE(
   _request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug } = await params;
+  return withErrorHandler(async () => {
+    const { slug } = await params;
 
-  try {
+    const existing = await prisma.article.findUnique({
+      where: { slug },
+    });
+
+    if (!existing) {
+      return errorResponse("Article not found", 404);
+    }
+
     await prisma.article.delete({
       where: { slug },
     });
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Failed to delete article:", error);
-    return NextResponse.json(
-      { error: "Failed to delete article" },
-      { status: 500 }
-    );
-  }
+    return successResponse({ success: true });
+  });
 }

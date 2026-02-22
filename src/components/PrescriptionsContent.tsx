@@ -13,11 +13,31 @@ import AccountSidebar from "@/components/AccountSidebar";
 import PrescriptionCard from "@/components/PrescriptionCard";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
-import { getPrescriptionsSorted } from "@/data/prescriptions";
 
-export default function PrescriptionsContent() {
+type PrescriptionItem = {
+  herb: string;
+  productSlug?: string;
+  form: string;
+  dosage: string;
+  duration: string;
+};
+
+type PrescriptionData = {
+  id: string;
+  practitionerSlug: string;
+  date: string;
+  condition: string;
+  notes: string;
+  items: PrescriptionItem[];
+  practitionerName: string;
+};
+
+type PrescriptionsContentProps = {
+  prescriptions: PrescriptionData[];
+};
+
+export default function PrescriptionsContent({ prescriptions }: PrescriptionsContentProps) {
   const { isClient } = useAuth();
-  const prescriptions = getPrescriptionsSorted();
 
   // Redirect if not logged in as client
   if (!isClient) {

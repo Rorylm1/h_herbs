@@ -11,15 +11,19 @@
   slug = "chamomile-tea".
 */
 
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  errorResponse,
+  withErrorHandler,
+} from "@/lib/api-helpers";
 
 type RouteContext = {
   params: Promise<{ slug: string }>;
 };
 
-export async function GET(_request: Request, context: RouteContext) {
-  try {
+export function GET(_request: Request, context: RouteContext) {
+  return withErrorHandler(async () => {
     const { slug } = await context.params;
 
     const product = await prisma.product.findUnique({
@@ -27,24 +31,15 @@ export async function GET(_request: Request, context: RouteContext) {
     });
 
     if (!product) {
-      return NextResponse.json(
-        { error: "Product not found" },
-        { status: 404 }
-      );
+      return errorResponse("Product not found", 404);
     }
 
-    return NextResponse.json(product);
-  } catch (error) {
-    console.error("Failed to fetch product:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch product" },
-      { status: 500 }
-    );
-  }
+    return successResponse(product);
+  });
 }
 
-export async function PUT(request: Request, context: RouteContext) {
-  try {
+export function PUT(request: Request, context: RouteContext) {
+  return withErrorHandler(async () => {
     const { slug } = await context.params;
     const body = await request.json();
 
@@ -53,10 +48,7 @@ export async function PUT(request: Request, context: RouteContext) {
     });
 
     if (!existing) {
-      return NextResponse.json(
-        { error: "Product not found" },
-        { status: 404 }
-      );
+      return errorResponse("Product not found", 404);
     }
 
     const product = await prisma.product.update({
@@ -82,18 +74,12 @@ export async function PUT(request: Request, context: RouteContext) {
       },
     });
 
-    return NextResponse.json(product);
-  } catch (error) {
-    console.error("Failed to update product:", error);
-    return NextResponse.json(
-      { error: "Failed to update product" },
-      { status: 500 }
-    );
-  }
+    return successResponse(product);
+  });
 }
 
-export async function DELETE(_request: Request, context: RouteContext) {
-  try {
+export function DELETE(_request: Request, context: RouteContext) {
+  return withErrorHandler(async () => {
     const { slug } = await context.params;
 
     const existing = await prisma.product.findUnique({
@@ -101,22 +87,13 @@ export async function DELETE(_request: Request, context: RouteContext) {
     });
 
     if (!existing) {
-      return NextResponse.json(
-        { error: "Product not found" },
-        { status: 404 }
-      );
+      return errorResponse("Product not found", 404);
     }
 
     await prisma.product.delete({
       where: { slug },
     });
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Failed to delete product:", error);
-    return NextResponse.json(
-      { error: "Failed to delete product" },
-      { status: 500 }
-    );
-  }
+    return successResponse({ success: true });
+  });
 }

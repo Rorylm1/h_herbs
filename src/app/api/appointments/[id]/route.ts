@@ -1,22 +1,34 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  errorResponse,
+  withErrorHandler,
+} from "@/lib/api-helpers";
 
 const VALID_STATUSES = ["upcoming", "completed", "cancelled"];
 
-export async function PUT(
+export function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { id } = await params;
     const body = await request.json();
     const { status } = body;
 
     if (!status || !VALID_STATUSES.includes(status)) {
-      return NextResponse.json(
-        { error: `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}` },
-        { status: 400 }
+      return errorResponse(
+        `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}`,
+        400,
       );
+    }
+
+    const existing = await prisma.booking.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      return errorResponse("Booking not found", 404);
     }
 
     const booking = await prisma.booking.update({
@@ -24,12 +36,6 @@ export async function PUT(
       data: { status },
     });
 
-    return NextResponse.json(booking);
-  } catch (error) {
-    console.error("Error updating booking:", error);
-    return NextResponse.json(
-      { error: "Failed to update booking" },
-      { status: 500 }
-    );
-  }
+    return successResponse(booking);
+  });
 }

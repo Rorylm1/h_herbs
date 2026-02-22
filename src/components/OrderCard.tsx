@@ -9,7 +9,26 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { type Order, formatOrderId } from "@/data/orders";
+
+type OrderItem = {
+  productSlug: string;
+  name: string;
+  quantity: number;
+  price: number;
+};
+
+type Order = {
+  id: string;
+  date: string;
+  status: "processing" | "shipped" | "delivered";
+  items: OrderItem[];
+  total: number;
+  trackingNumber?: string | null;
+};
+
+function formatOrderId(id: string): string {
+  return id.toUpperCase().replace("ord-", "ORD-");
+}
 
 type OrderCardProps = {
   order: Order;

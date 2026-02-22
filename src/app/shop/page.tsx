@@ -7,7 +7,7 @@
 */
 
 import ShopContent from "@/components/ShopContent";
-import type { Product } from "@/data/products";
+import type { Product } from "@/types";
 import { prisma } from "@/lib/prisma";
 
 export const metadata = {

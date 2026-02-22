@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { successResponse, withErrorHandler } from "@/lib/api-helpers";
 
-export async function GET(request: NextRequest) {
-  try {
+export function GET(request: NextRequest) {
+  return withErrorHandler(async () => {
     const practitioner = request.nextUrl.searchParams.get("practitioner");
 
     const bookings = await prisma.booking.findMany({
@@ -10,12 +11,6 @@ export async function GET(request: NextRequest) {
       orderBy: [{ date: "asc" }, { time: "asc" }],
     });
 
-    return NextResponse.json(bookings);
-  } catch (error) {
-    console.error("Error fetching appointments:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch appointments" },
-      { status: 500 }
-    );
-  }
+    return successResponse(bookings);
+  });
 }

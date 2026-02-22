@@ -5,32 +5,37 @@
   POST → Create a new article
 */
 
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  errorResponse,
+  withErrorHandler,
+} from "@/lib/api-helpers";
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const authorSlug = searchParams.get("authorSlug");
+export function GET(request: Request) {
+  return withErrorHandler(async () => {
+    const { searchParams } = new URL(request.url);
+    const authorSlug = searchParams.get("authorSlug");
 
-  try {
     const articles = await prisma.article.findMany({
       where: authorSlug ? { authorSlug } : undefined,
       orderBy: { publishedDate: "desc" },
     });
 
-    return NextResponse.json(articles);
-  } catch (error) {
-    console.error("Failed to fetch articles:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch articles" },
-      { status: 500 }
-    );
-  }
+    return successResponse(articles);
+  });
 }
 
-export async function POST(request: Request) {
-  try {
+export function POST(request: Request) {
+  return withErrorHandler(async () => {
     const body = await request.json();
+
+    if (!body.slug || !body.title || !body.authorSlug || !body.content) {
+      return errorResponse(
+        "slug, title, authorSlug, and content are required",
+        400,
+      );
+    }
 
     const article = await prisma.article.create({
       data: {
@@ -46,12 +51,6 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(article, { status: 201 });
-  } catch (error) {
-    console.error("Failed to create article:", error);
-    return NextResponse.json(
-      { error: "Failed to create article" },
-      { status: 500 }
-    );
-  }
+    return successResponse(article, 201);
+  });
 }

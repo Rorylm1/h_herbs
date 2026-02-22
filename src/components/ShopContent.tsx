@@ -14,7 +14,7 @@
 */
 
 import { useState, useMemo } from "react";
-import type { Product } from "@/data/products";
+import type { Product } from "@/types";
 import ProductCard from "./ProductCard";
 import FilterSidebar from "./FilterSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";

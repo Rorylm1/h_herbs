@@ -16,22 +16,49 @@ import AccountSidebar from "@/components/AccountSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
 import BotanicalBorder from "@/components/svg/BotanicalBorder";
-import { getPrescriptionById, type Prescription } from "@/data/prescriptions";
-import { practitioners } from "@/data/practitioners";
-import { products } from "@/data/products";
 
-type PrescriptionDetailProps = {
-  prescriptionId: string;
+type PrescriptionItem = {
+  herb: string;
+  productSlug?: string;
+  form: string;
+  dosage: string;
+  duration: string;
 };
 
-export default function PrescriptionDetail({ prescriptionId }: PrescriptionDetailProps) {
+type PrescriptionData = {
+  id: string;
+  practitionerSlug: string;
+  date: string;
+  condition: string;
+  notes: string;
+  items: PrescriptionItem[];
+};
+
+type PractitionerInfo = {
+  slug: string;
+  name: string;
+  title: string;
+  photo: string;
+};
+
+type ProductInfo = {
+  slug: string;
+  name: string;
+  price: number;
+  image: string;
+};
+
+type PrescriptionDetailProps = {
+  prescription: PrescriptionData | null;
+  practitioner: PractitionerInfo | null;
+  products: ProductInfo[];
+};
+
+export default function PrescriptionDetail({ prescription, practitioner, products }: PrescriptionDetailProps) {
   const { isClient } = useAuth();
   const { addItem } = useCart();
   const [addedToCart, setAddedToCart] = useState(false);
 
-  const prescription = getPrescriptionById(prescriptionId);
-
-  // Redirect if not logged in as client
   if (!isClient) {
     return (
       <section className="bg-cream py-16">
@@ -53,7 +80,6 @@ export default function PrescriptionDetail({ prescriptionId }: PrescriptionDetai
     );
   }
 
-  // Show not found if prescription doesn't exist
   if (!prescription) {
     return (
       <section className="bg-cream py-16">
@@ -75,8 +101,6 @@ export default function PrescriptionDetail({ prescriptionId }: PrescriptionDetai
     );
   }
 
-  const practitioner = practitioners.find((p) => p.slug === prescription.practitionerSlug);
-
   // Format date for display
   const formattedDate = new Date(prescription.date).toLocaleDateString("en-GB", {
     weekday: "long",
@@ -85,14 +109,13 @@ export default function PrescriptionDetail({ prescriptionId }: PrescriptionDetai
     year: "numeric",
   });
 
-  // Get products that are available in shop
   const availableProducts = prescription.items
     .filter((item) => item.productSlug)
     .map((item) => {
       const product = products.find((p) => p.slug === item.productSlug);
       return product ? { item, product } : null;
     })
-    .filter(Boolean) as { item: Prescription["items"][0]; product: (typeof products)[0] }[];
+    .filter(Boolean) as { item: PrescriptionItem; product: ProductInfo }[];
 
   // Handle "Order These Herbs" button
   function handleOrderHerbs() {

@@ -1,17 +1,10 @@
 /*
   ARTICLE DETAIL PAGE — /learn/[slug]
 
-  ARCHITECTURE TIP: Like the product detail page, this uses
-  generateStaticParams() for Static Site Generation — Next.js
-  pre-builds a page for each article at build time. The page
-  is a server component (fast, SEO-friendly, no JavaScript
-  shipped to the browser).
+  Server component rendered on-demand since data lives in the database.
 
-  The content field in our article data uses a lightweight
-  markup format: paragraphs separated by \n\n, ## headings,
-  ### subheadings, and **bold** text. Rather than installing
-  a full markdown library, we use a simple parser that handles
-  just these patterns — ideal for a prototype.
+  The content field uses a lightweight markup format: paragraphs
+  separated by \n\n, ## headings, ### subheadings, and **bold** text.
 */
 
 import { notFound } from "next/navigation";
@@ -65,12 +58,7 @@ function renderTextWithBold(text: string): React.ReactNode {
   );
 }
 
-/* ── SSG functions ──────────────────────────────────────────── */
-
-export async function generateStaticParams() {
-  const articles = await prisma.article.findMany({ select: { slug: true } });
-  return articles.map((a) => ({ slug: a.slug }));
-}
+/* ── Metadata ──────────────────────────────────────────── */
 
 export async function generateMetadata({
   params,

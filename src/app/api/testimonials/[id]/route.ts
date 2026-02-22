@@ -1,20 +1,32 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import {
+  successResponse,
+  errorResponse,
+  withErrorHandler,
+} from "@/lib/api-helpers";
 
-export async function PUT(
+export function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { id } = await params;
     const body = await request.json();
     const { clientName, text, condition } = body;
 
     if (!clientName || !text || !condition) {
-      return NextResponse.json(
-        { error: "clientName, text, and condition are required" },
-        { status: 400 }
+      return errorResponse(
+        "clientName, text, and condition are required",
+        400,
       );
+    }
+
+    const existing = await prisma.testimonial.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      return errorResponse("Testimonial not found", 404);
     }
 
     const testimonial = await prisma.testimonial.update({
@@ -22,33 +34,29 @@ export async function PUT(
       data: { clientName, text, condition },
     });
 
-    return NextResponse.json(testimonial);
-  } catch (error) {
-    console.error("Error updating testimonial:", error);
-    return NextResponse.json(
-      { error: "Failed to update testimonial" },
-      { status: 500 }
-    );
-  }
+    return successResponse(testimonial);
+  });
 }
 
-export async function DELETE(
+export function DELETE(
   _request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  try {
+  return withErrorHandler(async () => {
     const { id } = await params;
+
+    const existing = await prisma.testimonial.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      return errorResponse("Testimonial not found", 404);
+    }
 
     await prisma.testimonial.delete({
       where: { id },
     });
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error deleting testimonial:", error);
-    return NextResponse.json(
-      { error: "Failed to delete testimonial" },
-      { status: 500 }
-    );
-  }
+    return successResponse({ success: true });
+  });
 }

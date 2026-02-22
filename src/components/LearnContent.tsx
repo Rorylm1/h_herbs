@@ -14,7 +14,7 @@
 */
 
 import { useState, useMemo } from "react";
-import type { ArticleCardData } from "./ArticleCard";
+import type { ArticleCardData } from "@/types";
 import ArticleCard from "./ArticleCard";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";

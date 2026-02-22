@@ -7,7 +7,7 @@
 */
 
 import Link from "next/link";
-import type { Service } from "@/data/practitioners";
+import type { Service } from "@/types";
 
 export default function ServicesTable({
   services,

@@ -14,16 +14,49 @@ import AccountSidebar from "@/components/AccountSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
 import BotanicalBorder from "@/components/svg/BotanicalBorder";
-import { getUpcomingBookings } from "@/data/bookings";
-import { getPrescriptionsSorted } from "@/data/prescriptions";
-import { getOrdersSorted, formatOrderId } from "@/data/orders";
-import { practitioners } from "@/data/practitioners";
 
-export default function AccountDashboard() {
+type DashboardBooking = {
+  id: string;
+  service: string;
+  date: string;
+  time: string;
+  practitioner: { name: string };
+};
+
+type DashboardPrescription = {
+  id: string;
+  condition: string;
+  date: string;
+  herbCount: number;
+  practitionerName: string;
+};
+
+type DashboardOrder = {
+  id: string;
+  date: string;
+  total: number;
+  status: string;
+  itemCount: number;
+};
+
+type AccountDashboardProps = {
+  upcomingBookings: DashboardBooking[];
+  prescriptionsCount: number;
+  ordersCount: number;
+  recentPrescription: DashboardPrescription | null;
+  recentOrder: DashboardOrder | null;
+};
+
+export default function AccountDashboard({
+  upcomingBookings,
+  prescriptionsCount,
+  ordersCount,
+  recentPrescription,
+  recentOrder,
+}: AccountDashboardProps) {
   const router = useRouter();
   const { user, isClient, logout } = useAuth();
 
-  // Redirect if not logged in as client
   if (!isClient) {
     return (
       <section className="bg-cream py-16">
@@ -45,25 +78,18 @@ export default function AccountDashboard() {
     );
   }
 
-  // Get summary data
-  const upcomingBookings = getUpcomingBookings();
   const nextBooking = upcomingBookings[0];
-  const recentPrescriptions = getPrescriptionsSorted().slice(0, 1);
-  const recentOrders = getOrdersSorted().slice(0, 1);
 
-  // Helper to get practitioner name
-  function getPractitionerName(slug: string): string {
-    const practitioner = practitioners.find((p) => p.slug === slug);
-    return practitioner?.name || slug;
-  }
-
-  // Format date for display
   function formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString("en-GB", {
       weekday: "short",
       day: "numeric",
       month: "short",
     });
+  }
+
+  function formatOrderId(id: string): string {
+    return id.toUpperCase().replace("ord-", "ORD-");
   }
 
   return (
@@ -128,13 +154,13 @@ export default function AccountDashboard() {
                 </div>
                 <div className="bg-white rounded-xl p-4 border border-sage-100 text-center">
                   <p className="text-2xl font-semibold text-forest-700">
-                    {getPrescriptionsSorted().length}
+                    {prescriptionsCount}
                   </p>
                   <p className="text-sm text-muted">Prescriptions</p>
                 </div>
                 <div className="bg-white rounded-xl p-4 border border-sage-100 text-center">
                   <p className="text-2xl font-semibold text-forest-700">
-                    {getOrdersSorted().length}
+                    {ordersCount}
                   </p>
                   <p className="text-sm text-muted">Orders</p>
                 </div>
@@ -182,7 +208,7 @@ export default function AccountDashboard() {
                             {nextBooking.service}
                           </p>
                           <p className="text-sm text-muted">
-                            with {getPractitionerName(nextBooking.practitionerSlug)}
+                            with {nextBooking.practitioner.name}
                           </p>
                           <p className="text-sm text-forest-700 mt-1">
                             {formatDate(nextBooking.date)} at {nextBooking.time}
@@ -219,7 +245,7 @@ export default function AccountDashboard() {
                         View all
                       </Link>
                     </div>
-                    {recentPrescriptions[0] ? (
+                    {recentPrescription ? (
                       <div className="flex items-start gap-4">
                         <div className="w-12 h-12 rounded-full bg-sage-100 flex items-center justify-center flex-shrink-0">
                           <svg
@@ -238,22 +264,22 @@ export default function AccountDashboard() {
                         </div>
                         <div>
                           <p className="font-medium text-charcoal">
-                            {recentPrescriptions[0].condition}
+                            {recentPrescription.condition}
                           </p>
                           <p className="text-sm text-muted">
-                            by {getPractitionerName(recentPrescriptions[0].practitionerSlug)}
+                            by {recentPrescription.practitionerName}
                           </p>
                           <p className="text-sm text-forest-700 mt-1">
-                            {recentPrescriptions[0].items.length} herbs • {formatDate(recentPrescriptions[0].date)}
+                            {recentPrescription.herbCount} herbs • {formatDate(recentPrescription.date)}
                           </p>
                         </div>
                       </div>
                     ) : (
                       <p className="text-muted">No prescriptions yet</p>
                     )}
-                    {recentPrescriptions[0] && (
+                    {recentPrescription && (
                       <Link
-                        href={`/account/prescriptions/${recentPrescriptions[0].id}`}
+                        href={`/account/prescriptions/${recentPrescription.id}`}
                         className="mt-4 inline-block text-sm font-medium text-forest-700 hover:underline"
                       >
                         View prescription →
@@ -280,7 +306,7 @@ export default function AccountDashboard() {
                         View all
                       </Link>
                     </div>
-                    {recentOrders[0] ? (
+                    {recentOrder ? (
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div className="flex items-start gap-4">
                           <div className="w-12 h-12 rounded-full bg-sage-100 flex items-center justify-center flex-shrink-0">
@@ -300,28 +326,28 @@ export default function AccountDashboard() {
                           </div>
                           <div>
                             <p className="font-medium text-charcoal">
-                              {formatOrderId(recentOrders[0].id)}
+                              {formatOrderId(recentOrder.id)}
                             </p>
                             <p className="text-sm text-muted">
-                              {recentOrders[0].items.length} items • £{recentOrders[0].total.toFixed(2)}
+                              {recentOrder.itemCount} items • £{recentOrder.total.toFixed(2)}
                             </p>
                             <p className="text-sm text-muted">
-                              {formatDate(recentOrders[0].date)}
+                              {formatDate(recentOrder.date)}
                             </p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
                           <span
                             className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                              recentOrders[0].status === "delivered"
+                              recentOrder.status === "delivered"
                                 ? "bg-emerald-100 text-emerald-700"
-                                : recentOrders[0].status === "shipped"
+                                : recentOrder.status === "shipped"
                                   ? "bg-amber-100 text-amber-700"
                                   : "bg-sage-100 text-charcoal"
                             }`}
                           >
-                            {recentOrders[0].status.charAt(0).toUpperCase() +
-                              recentOrders[0].status.slice(1)}
+                            {recentOrder.status.charAt(0).toUpperCase() +
+                              recentOrder.status.slice(1)}
                           </span>
                         </div>
                       </div>

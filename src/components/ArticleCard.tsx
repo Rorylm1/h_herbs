@@ -9,18 +9,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import BotanicalBorder from "@/components/svg/BotanicalBorder";
-
-export type ArticleCardData = {
-  slug: string;
-  title: string;
-  author: string;
-  authorName?: string;
-  category: string;
-  featuredImage: string;
-  excerpt: string;
-  content: string;
-  publishedDate: string | Date;
-};
+import type { ArticleCardData } from "@/types";
 
 export default function ArticleCard({ article }: { article: ArticleCardData }) {
   return (

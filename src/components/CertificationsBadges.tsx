@@ -8,7 +8,7 @@
   feel confident in their practitioner.
 */
 
-import type { Certification } from "@/data/practitioners";
+import type { Certification } from "@/types";
 
 export default function CertificationsBadges({
   certifications,

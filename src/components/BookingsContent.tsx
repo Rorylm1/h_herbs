@@ -14,15 +14,33 @@ import AccountSidebar from "@/components/AccountSidebar";
 import BookingCard from "@/components/BookingCard";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
-import { bookings, getUpcomingBookings, getPastBookings } from "@/data/bookings";
+
+type BookingWithPractitioner = {
+  id: string;
+  practitionerSlug: string;
+  service: string;
+  date: string;
+  time: string;
+  status: "upcoming" | "completed" | "cancelled";
+  notes: string | null;
+  practitioner: {
+    slug: string;
+    name: string;
+    photo: string;
+    title: string;
+  };
+};
+
+type BookingsContentProps = {
+  bookings: BookingWithPractitioner[];
+};
 
 type FilterTab = "all" | "upcoming" | "past";
 
-export default function BookingsContent() {
+export default function BookingsContent({ bookings }: BookingsContentProps) {
   const { isClient } = useAuth();
   const [activeTab, setActiveTab] = useState<FilterTab>("upcoming");
 
-  // Redirect if not logged in as client
   if (!isClient) {
     return (
       <section className="bg-cream py-16">
@@ -44,17 +62,21 @@ export default function BookingsContent() {
     );
   }
 
-  // Get filtered bookings
+  const upcomingBookings = bookings.filter((b) => b.status === "upcoming");
+  const pastBookings = bookings.filter(
+    (b) => b.status === "completed" || b.status === "cancelled"
+  );
+
   const filteredBookings =
     activeTab === "upcoming"
-      ? getUpcomingBookings()
+      ? upcomingBookings
       : activeTab === "past"
-        ? getPastBookings()
+        ? pastBookings
         : bookings;
 
   const tabs: { key: FilterTab; label: string; count: number }[] = [
-    { key: "upcoming", label: "Upcoming", count: getUpcomingBookings().length },
-    { key: "past", label: "Past", count: getPastBookings().length },
+    { key: "upcoming", label: "Upcoming", count: upcomingBookings.length },
+    { key: "past", label: "Past", count: pastBookings.length },
     { key: "all", label: "All", count: bookings.length },
   ];
 
