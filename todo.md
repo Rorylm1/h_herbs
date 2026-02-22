@@ -208,7 +208,7 @@
 
 ---
 
-# Milestone 6: Practitioner Portal + Database
+# Milestone 6: Practitioner Portal + Database ✅
 
 ## Database Infrastructure (Supabase + Prisma)
 - [x] Install `prisma`, `@prisma/client`, `@prisma/adapter-pg`, `pg`, `@supabase/supabase-js`
@@ -222,158 +222,129 @@
 - [x] Add `.env.example` with required env var template
 - [x] Add `db:push`, `db:seed`, `db:generate`, `db:studio` scripts to package.json
 
-## Image Storage (Supabase Storage)
-- [ ] Create storage buckets: product-images, article-images, practitioner-photos, site-images
-- [ ] Build reusable `ImageUpload` component with drag-and-drop
-- [ ] Build `/api/upload` route for Supabase Storage uploads
-
 ## Migrate Public Pages to Database
-- [ ] Migrate `/shop`, `/shop/[slug]` — query Product table
-- [ ] Migrate `/herbalists`, `/herbalists/[slug]` — query Practitioner table
-- [ ] Migrate `/learn`, `/learn/[slug]` — query Article table
-- [ ] Migrate homepage sections (featured practitioners, latest articles, testimonials)
-- [ ] Migrate `/account/*` pages — query Booking, Order, Prescription tables
-- [ ] Remove static data files after migration verified
+- [x] Migrate `/shop`, `/shop/[slug]` — query Product table
+- [x] Migrate `/herbalists`, `/herbalists/[slug]` — query Practitioner table
+- [x] Migrate `/learn`, `/learn/[slug]` — query Article table
+- [x] Migrate homepage sections (featured practitioners, latest articles, testimonials)
+- [x] Migrate `/account/*` pages — query Booking, Order, Prescription tables
+- [x] Remove static data files after migration verified
 
 ## Practitioner Portal — Layout & Navigation
-- [ ] Build `PractitionerSidebar` navigation component
-- [ ] Create portal layout with auth guard (`isPractitioner` check)
+- [x] Build `PractitionerSidebar` navigation component
+- [x] Create portal layout with auth guard (`isPractitioner` check)
 
-## Practitioner Portal — Shop Management (highest priority)
-- [ ] Build `/practitioner/shop` — product list with search/filter, edit/delete actions
-- [ ] Build `/practitioner/shop/new` — create product form with image upload
-- [ ] Build `/practitioner/shop/[slug]/edit` — edit product form
-- [ ] Build `/api/products` CRUD API routes
-- [ ] Build delete confirmation modal
+## Practitioner Portal — Shop Management
+- [x] Build `/practitioner/shop` — product list with search/filter, edit/delete actions
+- [x] Build `/practitioner/shop/new` — create product form
+- [x] Build `/practitioner/shop/[slug]/edit` — edit product form
+- [x] Build `/api/products` CRUD API routes
+- [x] Build `ProductForm` and `ShopManagement` components
+- [x] Build delete confirmation modal
 
 ## Practitioner Portal — Profile Editor
-- [ ] Build `/practitioner/profile` — edit bio, qualifications, specialities, services, photo
-- [ ] Build `/api/practitioners/[slug]` update API route
+- [x] Build `/practitioner/profile` — edit bio, qualifications, specialities, services, photo
+- [x] Build `/api/practitioners/[slug]` update API route
 
 ## Practitioner Portal — Article Management
-- [ ] Build `/practitioner/articles` — article list with draft/published badges
-- [ ] Build `/practitioner/articles/new` — article editor with featured image upload
-- [ ] Build `/practitioner/articles/[slug]/edit` — edit article
-- [ ] Build `/api/articles` CRUD API routes
-- [ ] Publish/unpublish toggle, delete with confirmation
+- [x] Build `/practitioner/articles` — article list with draft/published badges
+- [x] Build `/practitioner/articles/new` — article editor
+- [x] Build `/practitioner/articles/[slug]/edit` — edit article
+- [x] Build `/api/articles` CRUD API routes
+- [x] Publish/unpublish toggle, delete with confirmation
 
 ## Practitioner Portal — Availability Management
-- [ ] Build `/practitioner/availability` — weekly calendar grid
-- [ ] Toggle days on/off, set start/end times
-- [ ] Build `/api/availability` CRUD API route
+- [x] Build `/practitioner/availability` — weekly calendar grid
+- [x] Toggle days on/off, set start/end times
+- [x] Build `/api/availability` CRUD API route
 
 ## Practitioner Portal — Appointments
-- [ ] Build `/practitioner/appointments` — list with filter tabs (upcoming/past/all)
-- [ ] Status management (confirm, complete, cancel)
-- [ ] Build `/api/appointments/[id]` status update route
+- [x] Build `/practitioner/appointments` — list with filter tabs (upcoming/past/all)
+- [x] Status management (confirm, complete, cancel)
+- [x] Build `/api/appointments/[id]` status update route
 
 ## Practitioner Portal — Testimonial Management
-- [ ] Build `/practitioner/testimonials` — list, add, edit, delete testimonials
-- [ ] Build `/api/testimonials` CRUD API routes
+- [x] Build `/practitioner/testimonials` — list, add, edit, delete testimonials
+- [x] Build `/api/testimonials` CRUD API routes
 
 ## Practitioner Portal — Site Images
-- [ ] Build `/practitioner/images` — media library for hero/banner images
-- [ ] Upload, replace, delete images
-- [ ] Build `/api/site-images` CRUD API routes
+- [x] Build `/practitioner/images` — media library (URL-based management)
+- [x] Build `/api/site-images` CRUD API routes
 
 ## Practitioner Portal — Dashboard
-- [ ] Build `/practitioner` dashboard — quick stats, recent activity, quick-action buttons
+- [x] Build `/practitioner` dashboard — quick stats, recent activity, quick-action buttons
+- [x] Build `/api/practitioner/dashboard` stats route
 
-## Git & Deploy
-- [ ] Git commit + push (Vercel auto-deploys)
-- [ ] Add Supabase env vars to Vercel project settings
-
----
-
-# Milestone 7: Visual Design Enhancement ✅
-
-## SVG Assets (src/components/svg/)
-- [x] Create `DandelionLogo` SVG component (full + icon variants)
-- [x] Create `BotanicalDivider` SVG component (simple + elaborate variants)
-- [x] Create `BotanicalBorder` SVG component (4 corner positions via CSS transform)
-- [x] Create `BotanicalPattern` SVG component (repeatable tile background)
-- [x] Create `OrganicDivider` SVG component (wave, leaf-vine, seeds variants)
-- [x] Create `HerbIllustration` SVG component (chamomile, elderberry, nettle, dandelion, lavender, echinacea)
-- [x] Create `QuoteLeaf` SVG component (quote mark with botanical accent)
-
-## New Shared Components
-- [x] Build `DandelionWatermark` — positioned low-opacity background motif
-- [x] Build `VideoPlaceholder` — homepage video section with poster image and play button
-- [x] Build `LatinName` — italic serif typography utility for Latin botanical names
-
-## CSS Theme Additions
-- [x] Add botanical colour tokens and utility classes to `globals.css`
-
-## Layout Enhancements
-- [x] Update `SiteHeader` — add dandelion icon next to text logo
-- [x] Update `SiteFooter` — add dandelion icon, botanical pattern background, watermark, Hippocrates quote
-- [x] Update `SectionHeading` — replace simple leaf divider with `BotanicalDivider`
-
-## Homepage Enhancements
-- [x] Update `HeroBanner` — richer botanical pattern overlay, corner borders, watermark, organic transition
-- [x] Add `VideoPlaceholder` section to homepage (between pathways and practitioners)
-- [x] Add `OrganicDivider` transitions between homepage sections
-- [x] Update `TestimonialCarousel` — `QuoteLeaf`, botanical borders, background treatment
-- [x] Update `PathwayCard` — botanical corner accents
-- [x] Update newsletter CTA — botanical pattern, watermark, Thoreau quote
-
-## Practitioner Enhancements
-- [x] Update `PractitionerCard` — botanical corner accent on photo
-- [x] Update `PractitionerHero` — botanical pattern background, border accents, watermark
-- [x] Update `/herbalists` directory page — enriched hero, organic divider, watermark
-- [x] Update `/herbalists/[slug]` profile page — organic dividers between sections
-- [x] Update `ReviewCard` — botanical corner accent, `QuoteLeaf`
-
-## Shop Enhancements
-- [x] Add `latinName` field to `Product` type and populate for all 12 products
-- [x] Update product Unsplash image URLs (unique per product)
-- [x] Update `ProductCard` — display Latin name, botanical accent
-- [x] Update `/shop/[slug]` product detail page — Latin name display, botanical borders
-- [x] Update `ShopContent` — enriched hero, watermark, organic divider
-
-## Booking & Remaining Pages
-- [x] Update `BookingStepper` — organic vine connectors, leaf accents
-- [x] Update `BookingFlow` Step 5 — watermark, botanical borders on confirmation
-- [x] Update `/checkout/success` — watermark, botanical accents
-- [x] Update cart page — watermark on empty state, botanical accents on checkout card
-- [x] Update `ArticleCard` — botanical corner accent
-- [x] Update `ComingSoon` — dandelion logo replacing leaf, botanical pattern
+## Refactoring & Cleanup
+- [x] Create shared types file (`src/types/index.ts`) — consolidate types from static data files
+- [x] Update all component imports to use `@/types` instead of `@/data/*`
+- [x] Standardize API error handling (`src/lib/api-helpers.ts`)
+- [x] Fix BookingFlow to accept practitioners as prop instead of static import
+- [x] Delete all static data files (`src/data/*.ts`)
+- [x] Add `force-dynamic` to all database-backed pages
+- [x] Fix Vercel deploy (postinstall prisma generate, session pooler, pool size)
 
 ## Git & Deploy
 - [x] Git commit + push (Vercel auto-deploys)
+- [x] Add Supabase env vars to Vercel project settings
+- [x] Configure session pooler connection for serverless
+
+## Deferred to Future Milestone
+- Image upload via Supabase Storage (buckets, `ImageUpload` component, `/api/upload` route)
+- Forms currently use URL fields for images; file upload to be added later
 
 ---
 
-# Milestone 8: Database, Auth & Image Storage (Post-V1)
+# Visual Design Enhancement ✅
+_(Completed out of order before M6 — botanical SVGs, dandelion branding, organic transitions throughout the site.)_
 
-## Database
-- [ ] Choose and set up hosted Postgres (Vercel Postgres / Supabase / Neon)
-- [ ] Install and configure ORM (Prisma or Drizzle)
-- [ ] Design database schema — practitioners, products, articles, bookings, prescriptions, orders, users
-- [ ] Seed database with existing dummy data
+---
 
-## Authentication
-- [ ] Install and configure Auth.js (NextAuth.js)
-- [ ] Implement real login/signup (email/password and/or Google sign-in)
-- [ ] Add role-based access control (client vs practitioner)
-- [ ] Replace simulated auth toggle with real auth state
+# Milestone 7: Real Authentication
 
-## Image Storage
-- [ ] Set up image storage service (Cloudinary / Vercel Blob / S3)
-- [ ] Build image upload flow for practitioner photos, product images, article images
-- [ ] Migrate existing Unsplash placeholder images to storage
+## Prisma Schema Updates
+- [ ] Add `User` model (id, email, passwordHash, name, role, practitionerSlug?)
+- [ ] Add `Account`, `Session`, `VerificationToken` models (Auth.js standard)
+- [ ] Run `prisma db push` to create new tables
 
-## Data Migration
-- [ ] Replace all TypeScript data file imports with database queries
-- [ ] Verify all existing pages work identically with database-backed data
+## Auth.js Setup
+- [ ] Install `next-auth@5` (Auth.js v5) and `@auth/prisma-adapter`
+- [ ] Create `auth.ts` config — Prisma adapter, credentials provider
+- [ ] Create `/api/auth/[...nextauth]` route handler
+- [ ] Set up `AUTH_SECRET` env var (local + Vercel)
+- [ ] Add bcrypt for password hashing
+
+## Signup & Login Pages
+- [ ] Build `/signup` page — name, email, password, role selector (client/practitioner)
+- [ ] Build new `/login` page — replace mock login with real email/password form
+- [ ] Handle form validation and error messages
+- [ ] Redirect to dashboard after successful login
+
+## Replace Simulated Auth
+- [ ] Replace `AuthContext` with Auth.js session provider
+- [ ] Update `useAuth` hook to use `useSession()` from Auth.js
+- [ ] Update `SiteHeader` to show real user name and avatar
+- [ ] Update all `isPractitioner` / `isClient` checks to use real session role
+- [ ] Remove `AuthToggle` dev component
+- [ ] Remove `AuthProvider` from `Providers.tsx`
+
+## Route Protection
+- [ ] Add Next.js middleware (`middleware.ts`) for auth checks
+- [ ] Protect `/practitioner/*` routes — redirect to login if not practitioner
+- [ ] Protect `/account/*` routes — redirect to login if not logged in
+- [ ] Protect API routes — return 401 for unauthenticated requests
+
+## Seed Admin User
+- [ ] Create seed for default practitioner user (Hector) with hashed password
+- [ ] Link practitioner user to existing Practitioner record via slug
 
 ## Git & Deploy
 - [ ] Git commit + push (Vercel auto-deploys)
-- [ ] Configure production database and env vars on Vercel
+- [ ] Add `AUTH_SECRET` env var to Vercel
 
 ---
 
-# Milestone 9: Google Calendar OAuth Integration (Post-V1)
+# Milestone 8: Google Calendar OAuth Integration
 
 ## Google Cloud Setup
 - [ ] Create Google Cloud project and enable Calendar API

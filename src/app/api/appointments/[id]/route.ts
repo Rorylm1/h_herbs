@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 import {
   successResponse,
   errorResponse,
@@ -12,6 +13,10 @@ export function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   return withErrorHandler(async () => {
+    const session = await auth();
+    if (!session) return errorResponse("Unauthorized", 401);
+    if (session.user.role !== "practitioner") return errorResponse("Forbidden", 403);
+
     const { id } = await params;
     const body = await request.json();
     const { status } = body;

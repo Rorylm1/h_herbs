@@ -2,109 +2,80 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
 import BotanicalBorder from "@/components/svg/BotanicalBorder";
 import DandelionLogo from "@/components/svg/DandelionLogo";
 
-export default function LoginContent() {
+export default function SignupPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState<"client" | "practitioner">("client");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  if (status === "loading") {
-    return (
-      <section className="relative bg-cream py-24 overflow-hidden">
-        <div className="mx-auto max-w-md text-center">
-          <div className="animate-pulse text-muted">Loading...</div>
-        </div>
-      </section>
-    );
-  }
-
-  if (session?.user) {
-    const userRole = (session.user as { role?: string }).role;
-    return (
-      <>
-        <section className="relative bg-forest-800 py-16 md:py-20 overflow-hidden">
-          <BotanicalPattern
-            className="absolute inset-0 text-white opacity-[0.04]"
-            patternId="login-hero-pattern"
-          />
-          <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="font-heading text-4xl md:text-5xl font-semibold text-white">
-              Already Signed In
-            </h1>
-            <p className="mt-4 text-sage-200/70 max-w-2xl mx-auto text-lg leading-relaxed">
-              You&apos;re currently signed in as {session.user.name || session.user.email}.
-            </p>
-          </div>
-        </section>
-
-        <section className="relative bg-cream py-12 md:py-16 overflow-hidden">
-          <DandelionWatermark
-            position="right"
-            size="lg"
-            className="text-sage-300"
-          />
-          <div className="relative z-10 mx-auto max-w-md px-4 sm:px-6 lg:px-8 text-center">
-            <div className="space-y-4">
-              <button
-                onClick={() =>
-                  router.push(
-                    userRole === "practitioner" ? "/practitioner" : "/account"
-                  )
-                }
-                className="w-full bg-forest-700 text-white py-3 px-6 rounded-lg font-semibold hover:bg-forest-800 transition-colors"
-              >
-                Go to{" "}
-                {userRole === "practitioner"
-                  ? "Practitioner Dashboard"
-                  : "My Account"}
-              </button>
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="w-full bg-white text-forest-700 border border-forest-700 py-3 px-6 rounded-lg font-semibold hover:bg-sage-50 transition-colors"
-              >
-                Sign Out
-              </button>
-            </div>
-          </div>
-        </section>
-      </>
-    );
+  function validate(): string | null {
+    if (!name.trim() || !email.trim() || !password || !confirmPassword) {
+      return "All fields are required.";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return "Please enter a valid email address.";
+    }
+    if (password.length < 8) {
+      return "Password must be at least 8 characters.";
+    }
+    if (password !== confirmPassword) {
+      return "Passwords do not match.";
+    }
+    return null;
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
-    if (!email.trim() || !password) {
-      setError("Please enter your email and password.");
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const result = await signIn("credentials", {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Signup failed. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      const signInResult = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
 
-      if (result?.error) {
-        setError("Invalid email or password. Please try again.");
-        setIsLoading(false);
+      if (signInResult?.error) {
+        setError("Account created but sign-in failed. Please log in manually.");
+        router.push("/login");
         return;
       }
 
-      router.push("/account");
+      router.push(role === "practitioner" ? "/practitioner" : "/account");
       router.refresh();
     } catch {
       setError("Something went wrong. Please try again.");
@@ -118,20 +89,19 @@ export default function LoginContent() {
       <section className="relative bg-forest-800 py-16 md:py-20 overflow-hidden">
         <BotanicalPattern
           className="absolute inset-0 text-white opacity-[0.04]"
-          patternId="login-hero-pattern"
+          patternId="signup-hero-pattern"
         />
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="font-heading text-4xl md:text-5xl font-semibold text-white">
-            Sign In
+            Create Your Account
           </h1>
           <p className="mt-4 text-sage-200/70 max-w-2xl mx-auto text-lg leading-relaxed">
-            Access your account to manage bookings, view prescriptions, and
-            more.
+            Join Hector&apos;s Herbs to book consultations, manage prescriptions, and shop our herbal remedies.
           </p>
         </div>
       </section>
 
-      {/* Login form */}
+      {/* Signup form */}
       <section className="relative bg-cream py-12 md:py-16 overflow-hidden">
         <DandelionWatermark
           position="right"
@@ -163,6 +133,57 @@ export default function LoginContent() {
             )}
 
             <form onSubmit={handleSubmit} className="relative z-10 space-y-5">
+              {/* Role selector */}
+              <div>
+                <label className="block text-sm font-medium text-charcoal mb-2">
+                  I am a...
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setRole("client")}
+                    className={`py-3 px-4 rounded-lg border-2 font-medium transition-all ${
+                      role === "client"
+                        ? "border-forest-700 bg-forest-700 text-white"
+                        : "border-sage-200 text-charcoal hover:border-sage-300"
+                    }`}
+                  >
+                    Client
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRole("practitioner")}
+                    className={`py-3 px-4 rounded-lg border-2 font-medium transition-all ${
+                      role === "practitioner"
+                        ? "border-forest-700 bg-forest-700 text-white"
+                        : "border-sage-200 text-charcoal hover:border-sage-300"
+                    }`}
+                  >
+                    Practitioner
+                  </button>
+                </div>
+              </div>
+
+              {/* Name field */}
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-charcoal mb-1"
+                >
+                  Full name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Jane Doe"
+                  className="w-full px-4 py-3 rounded-lg border border-sage-200 focus:border-forest-700 focus:ring-1 focus:ring-forest-700 outline-none transition-colors"
+                  disabled={isLoading}
+                />
+              </div>
+
               {/* Email field */}
               <div>
                 <label
@@ -201,6 +222,29 @@ export default function LoginContent() {
                   className="w-full px-4 py-3 rounded-lg border border-sage-200 focus:border-forest-700 focus:ring-1 focus:ring-forest-700 outline-none transition-colors"
                   disabled={isLoading}
                 />
+                <p className="mt-1 text-xs text-muted">
+                  Must be at least 8 characters
+                </p>
+              </div>
+
+              {/* Confirm password field */}
+              <div>
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-charcoal mb-1"
+                >
+                  Confirm password
+                </label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full px-4 py-3 rounded-lg border border-sage-200 focus:border-forest-700 focus:ring-1 focus:ring-forest-700 outline-none transition-colors"
+                  disabled={isLoading}
+                />
               </div>
 
               {/* Submit button */}
@@ -209,19 +253,19 @@ export default function LoginContent() {
                 disabled={isLoading}
                 className="w-full bg-forest-700 text-white py-3 px-6 rounded-lg font-semibold hover:bg-forest-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? "Signing in..." : "Sign In"}
+                {isLoading ? "Creating account..." : "Create Account"}
               </button>
             </form>
           </div>
 
-          {/* Sign up link */}
+          {/* Sign in link */}
           <p className="text-center text-sm text-muted mt-6">
-            Don&apos;t have an account?{" "}
+            Already have an account?{" "}
             <Link
-              href="/signup"
+              href="/login"
               className="text-forest-700 hover:text-forest-800 font-medium hover:underline"
             >
-              Sign up
+              Sign in
             </Link>
           </p>
         </div>

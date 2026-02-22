@@ -1,29 +1,13 @@
 "use client";
 
-/*
-  PROVIDERS — client-side wrapper for React Context providers.
-
-  ARCHITECTURE TIP: Next.js layouts are server components by default,
-  but React Contexts need "use client". This wrapper component bridges
-  the gap — it's a client component that wraps children in our providers.
-
-  As we add more contexts (auth toggle, etc.) they'll all go here,
-  so there's only one place to manage the provider stack.
-*/
-
+import { SessionProvider } from "next-auth/react";
 import { CartProvider } from "@/context/CartContext";
-import { AuthProvider } from "@/context/AuthContext";
-import AuthToggle from "@/components/AuthToggle";
 import type { ReactNode } from "react";
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
-    <AuthProvider>
-      <CartProvider>
-        {children}
-        {/* Floating dev toggle for simulating auth states */}
-        <AuthToggle />
-      </CartProvider>
-    </AuthProvider>
+    <SessionProvider>
+      <CartProvider>{children}</CartProvider>
+    </SessionProvider>
   );
 }

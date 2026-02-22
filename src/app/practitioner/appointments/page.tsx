@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -46,7 +46,9 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function AppointmentsPage() {
-  const { isPractitioner, user } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
+  const user = session?.user ?? null;
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filter, setFilter] = useState<FilterTab>("upcoming");
   const [loading, setLoading] = useState(true);
@@ -95,6 +97,10 @@ export default function AppointmentsPage() {
     if (filter === "past") return b.status === "completed" || b.status === "cancelled";
     return true;
   });
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isPractitioner) {
     return (

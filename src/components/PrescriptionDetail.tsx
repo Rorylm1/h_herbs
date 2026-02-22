@@ -10,7 +10,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import { useCart } from "@/context/CartContext";
 import AccountSidebar from "@/components/AccountSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
@@ -55,9 +55,14 @@ type PrescriptionDetailProps = {
 };
 
 export default function PrescriptionDetail({ prescription, practitioner, products }: PrescriptionDetailProps) {
-  const { isClient } = useAuth();
+  const { data: session, status } = useSession();
+  const isClient = session?.user?.role === "client";
   const { addItem } = useCart();
   const [addedToCart, setAddedToCart] = useState(false);
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isClient) {
     return (

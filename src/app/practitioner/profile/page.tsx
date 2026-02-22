@@ -15,7 +15,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -43,7 +43,9 @@ type ProfileData = {
 
 export default function PractitionerProfilePage() {
   const router = useRouter();
-  const { isPractitioner, user } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
+  const user = session?.user ?? null;
 
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -76,6 +78,10 @@ export default function PractitionerProfilePage() {
   useEffect(() => {
     if (isPractitioner) fetchProfile();
   }, [isPractitioner, fetchProfile]);
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isPractitioner) {
     return (

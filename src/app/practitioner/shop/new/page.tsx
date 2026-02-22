@@ -9,7 +9,7 @@
 */
 
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import ProductForm, { type ProductFormData } from "@/components/ProductForm";
@@ -18,7 +18,12 @@ import DandelionWatermark from "@/components/DandelionWatermark";
 
 export default function NewProductPage() {
   const router = useRouter();
-  const { isPractitioner } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isPractitioner) {
     return (

@@ -9,7 +9,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useSession, signOut } from "next-auth/react";
 import AccountSidebar from "@/components/AccountSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -55,7 +55,13 @@ export default function AccountDashboard({
   recentOrder,
 }: AccountDashboardProps) {
   const router = useRouter();
-  const { user, isClient, logout } = useAuth();
+  const { data: session, status } = useSession();
+  const isClient = session?.user?.role === "client";
+  const user = session?.user ?? null;
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isClient) {
     return (
@@ -104,7 +110,7 @@ export default function AccountDashboard({
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="font-heading text-3xl md:text-4xl font-semibold text-white">
-                Welcome back, {user?.name.split(" ")[0]}
+                Welcome back, {user?.name?.split(" ")[0]}
               </h1>
               <p className="mt-2 text-sage-200/70">
                 Manage your bookings, prescriptions, and orders
@@ -112,8 +118,7 @@ export default function AccountDashboard({
             </div>
             <button
               onClick={() => {
-                logout();
-                router.push("/");
+                signOut({ callbackUrl: "/" });
               }}
               className="self-start md:self-center text-sage-200 hover:text-white text-sm font-medium flex items-center gap-2 transition-colors"
             >

@@ -14,7 +14,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useSession, signOut } from "next-auth/react";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -36,10 +36,16 @@ type ShopManagementProps = {
 
 export default function ShopManagement({ products }: ShopManagementProps) {
   const router = useRouter();
-  const { user, isPractitioner, logout } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
+  const user = session?.user ?? null;
   const [search, setSearch] = useState("");
   const [deleteSlug, setDeleteSlug] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isPractitioner) {
     return (
@@ -109,8 +115,7 @@ export default function ShopManagement({ products }: ShopManagementProps) {
             </div>
             <button
               onClick={() => {
-                logout();
-                router.push("/");
+                signOut({ callbackUrl: "/" });
               }}
               className="self-start md:self-center text-sage-200 hover:text-white text-sm font-medium flex items-center gap-2 transition-colors"
             >

@@ -9,7 +9,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import AccountSidebar from "@/components/AccountSidebar";
 import BookingCard from "@/components/BookingCard";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
@@ -38,8 +38,13 @@ type BookingsContentProps = {
 type FilterTab = "all" | "upcoming" | "past";
 
 export default function BookingsContent({ bookings }: BookingsContentProps) {
-  const { isClient } = useAuth();
+  const { data: session, status } = useSession();
+  const isClient = session?.user?.role === "client";
   const [activeTab, setActiveTab] = useState<FilterTab>("upcoming");
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isClient) {
     return (

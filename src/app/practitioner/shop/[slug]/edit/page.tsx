@@ -8,7 +8,7 @@
   shop management page.
 
   ARCHITECTURE TIP: This is a client component because it needs the
-  useAuth() hook and handles form interactivity. It fetches the product
+  useSession() hook and handles form interactivity. It fetches the product
   data on mount using the API endpoint. In a future iteration, this
   could be optimised with a server component wrapper passing initial
   data as props (like the shop list page does).
@@ -16,7 +16,7 @@
 
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import ProductForm, { type ProductFormData } from "@/components/ProductForm";
@@ -30,7 +30,8 @@ type EditProductPageProps = {
 export default function EditProductPage({ params }: EditProductPageProps) {
   const { slug } = use(params);
   const router = useRouter();
-  const { isPractitioner } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
   const [product, setProduct] = useState<ProductFormData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -65,6 +66,10 @@ export default function EditProductPage({ params }: EditProductPageProps) {
 
     loadProduct();
   }, [slug]);
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isPractitioner) {
     return (

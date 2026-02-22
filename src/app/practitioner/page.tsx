@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -32,7 +32,9 @@ function formatDate(dateStr: string): string {
 }
 
 export default function PractitionerDashboard() {
-  const { isPractitioner, user } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
+  const user = session?.user ?? null;
   const [stats, setStats] = useState<Stats>({
     products: 0,
     upcomingBookings: 0,
@@ -59,6 +61,10 @@ export default function PractitionerDashboard() {
   useEffect(() => {
     if (isPractitioner) fetchDashboardData();
   }, [isPractitioner, fetchDashboardData]);
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isPractitioner) {
     return (

@@ -11,7 +11,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import DandelionLogo from "@/components/svg/DandelionLogo";
 
 const navLinks = [
@@ -25,7 +25,10 @@ const navLinks = [
 export default function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { totalItems } = useCart();
-  const { isLoggedIn, isClient, isPractitioner, user } = useAuth();
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
+  const isPractitioner = session?.user?.role === "practitioner";
+  const user = session?.user ?? null;
 
   return (
     <header className="sticky top-0 z-50 bg-cream/95 backdrop-blur-sm border-b border-sage-200/50">
@@ -83,15 +86,17 @@ export default function SiteHeader() {
             </Link>
 
             {/* Account icon / User name */}
-            {isLoggedIn ? (
+            {status === "loading" ? (
+              <div className="hidden sm:block w-8 h-8 rounded-full bg-sage-200 animate-pulse" />
+            ) : isLoggedIn ? (
               <Link
                 href={isPractitioner ? "/practitioner" : "/account"}
                 className="hidden sm:flex items-center gap-2 text-charcoal hover:text-forest-700 transition-colors"
                 aria-label="My Account"
               >
-                <span className="text-sm font-medium">{user?.name.split(" ")[0]}</span>
+                <span className="text-sm font-medium">{user?.name?.split(" ")[0]}</span>
                 <div className="w-8 h-8 rounded-full bg-forest-700 flex items-center justify-center text-white text-sm font-semibold">
-                  {user?.name.charAt(0)}
+                  {user?.name?.charAt(0)}
                 </div>
               </Link>
             ) : (
@@ -162,16 +167,16 @@ export default function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            {isLoggedIn ? (
+            {status === "loading" ? null : isLoggedIn ? (
               <Link
                 href={isPractitioner ? "/practitioner" : "/account"}
                 onClick={() => setMobileOpen(false)}
                 className="flex items-center gap-2 py-2 px-2 font-body text-base text-charcoal hover:bg-sage-50 hover:text-forest-700 rounded-md transition-colors"
               >
                 <div className="w-6 h-6 rounded-full bg-forest-700 flex items-center justify-center text-white text-xs font-semibold">
-                  {user?.name.charAt(0)}
+                  {user?.name?.charAt(0)}
                 </div>
-                {user?.name.split(" ")[0]}&apos;s Account
+                {user?.name?.split(" ")[0]}&apos;s Account
               </Link>
             ) : (
               <Link

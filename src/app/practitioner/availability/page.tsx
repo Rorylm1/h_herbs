@@ -18,7 +18,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -47,7 +47,8 @@ function defaultSlots(): Slot[] {
 
 export default function PractitionerAvailabilityPage() {
   const router = useRouter();
-  const { isPractitioner } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
 
   const [slots, setSlots] = useState<Slot[]>(defaultSlots());
   const [loading, setLoading] = useState(true);
@@ -118,6 +119,10 @@ export default function PractitionerAvailabilityPage() {
       setSaving(false);
     }
   };
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isPractitioner) {
     return (

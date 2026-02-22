@@ -13,7 +13,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -36,7 +36,8 @@ function slugify(text: string): string {
 
 export default function NewArticlePage() {
   const router = useRouter();
-  const { isPractitioner } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
 
   const [form, setForm] = useState({
     title: "",
@@ -49,6 +50,10 @@ export default function NewArticlePage() {
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isPractitioner) {
     return (

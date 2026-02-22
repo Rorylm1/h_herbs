@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -22,7 +22,8 @@ type EditState = {
 };
 
 export default function SiteImagesPage() {
-  const { isPractitioner } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
   const [images, setImages] = useState<SiteImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [edits, setEdits] = useState<Record<string, EditState>>({});
@@ -94,6 +95,10 @@ export default function SiteImagesPage() {
     } finally {
       setSavingId(null);
     }
+  }
+
+  if (status === "loading") {
+    return null;
   }
 
   if (!isPractitioner) {

@@ -6,6 +6,7 @@
 */
 
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 import {
   successResponse,
   errorResponse,
@@ -28,6 +29,10 @@ export function GET(request: Request) {
 
 export function POST(request: Request) {
   return withErrorHandler(async () => {
+    const session = await auth();
+    if (!session) return errorResponse("Unauthorized", 401);
+    if (session.user.role !== "practitioner") return errorResponse("Forbidden", 403);
+
     const body = await request.json();
 
     if (!body.slug || !body.title || !body.authorSlug || !body.content) {

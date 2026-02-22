@@ -13,7 +13,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -29,7 +29,8 @@ export default function EditArticlePage() {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
-  const { isPractitioner } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
 
   const [form, setForm] = useState({
     title: "",
@@ -70,6 +71,10 @@ export default function EditArticlePage() {
   useEffect(() => {
     if (isPractitioner && slug) fetchArticle();
   }, [isPractitioner, slug, fetchArticle]);
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isPractitioner) {
     return (

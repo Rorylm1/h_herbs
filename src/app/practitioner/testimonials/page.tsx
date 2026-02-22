@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -24,7 +24,8 @@ type FormData = {
 const emptyForm: FormData = { clientName: "", condition: "", text: "" };
 
 export default function TestimonialsPage() {
-  const { isPractitioner } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -186,6 +187,10 @@ export default function TestimonialsPage() {
         </div>
       </div>
     );
+  }
+
+  if (status === "loading") {
+    return null;
   }
 
   if (!isPractitioner) {

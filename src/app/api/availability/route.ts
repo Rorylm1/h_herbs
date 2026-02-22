@@ -6,6 +6,7 @@
 */
 
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 import {
   successResponse,
   errorResponse,
@@ -39,6 +40,10 @@ type AvailabilitySlot = {
 
 export function PUT(request: Request) {
   return withErrorHandler(async () => {
+    const session = await auth();
+    if (!session) return errorResponse("Unauthorized", 401);
+    if (session.user.role !== "practitioner") return errorResponse("Forbidden", 403);
+
     const { practitionerSlug, slots } = (await request.json()) as {
       practitionerSlug: string;
       slots: AvailabilitySlot[];

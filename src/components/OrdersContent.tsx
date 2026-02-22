@@ -7,7 +7,7 @@
 */
 
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import AccountSidebar from "@/components/AccountSidebar";
 import OrderCard from "@/components/OrderCard";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
@@ -34,9 +34,13 @@ type OrdersContentProps = {
 };
 
 export default function OrdersContent({ orders }: OrdersContentProps) {
-  const { isClient } = useAuth();
+  const { data: session, status } = useSession();
+  const isClient = session?.user?.role === "client";
 
-  // Redirect if not logged in as client
+  if (status === "loading") {
+    return null;
+  }
+
   if (!isClient) {
     return (
       <section className="bg-cream py-16">

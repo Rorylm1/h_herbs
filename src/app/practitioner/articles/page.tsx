@@ -14,7 +14,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useSession } from "next-auth/react";
 import PractitionerSidebar from "@/components/PractitionerSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -30,7 +30,8 @@ type Article = {
 
 export default function PractitionerArticlesPage() {
   const router = useRouter();
-  const { isPractitioner } = useAuth();
+  const { data: session, status } = useSession();
+  const isPractitioner = session?.user?.role === "practitioner";
 
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,6 +75,10 @@ export default function PractitionerArticlesPage() {
       month: "short",
       year: "numeric",
     });
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!isPractitioner) {
     return (

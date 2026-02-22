@@ -404,20 +404,24 @@ This milestone was expanded to include the database infrastructure (originally M
 - Git commit + push. Vercel auto-deploys. Add Supabase env vars to Vercel.
 - **Testable:** Toggle to practitioner state. Manage products (add/edit/delete with images), edit profile, write/publish articles, manage availability, view appointments, manage testimonials, update site images. All changes persist in database and appear on public site immediately.
 
-### Milestone 7: Visual Design Enhancement ✅
-(Completed earlier — botanical SVGs, dandelion branding, organic transitions throughout the site.)
+### Visual Design Enhancement ✅
+_(Completed out of order before M6 — botanical SVGs, dandelion branding, organic transitions throughout the site.)_
 
-### Milestone 8: Real Authentication (Post-V1)
-Database infrastructure moved to M6. This milestone now focuses solely on replacing simulated auth with real authentication.
+### Milestone 7: Real Authentication
+Replace simulated auth with real login/signup. Database already in place from M6.
 
-- **Auth:** Install and configure Auth.js (NextAuth.js) — email/password and/or Google sign-in
-- **Role-based access:** Real client vs practitioner roles stored in database
-- **Replace auth toggle:** Remove simulated AuthContext, wire up real auth state
-- Git commit + push. Vercel auto-deploys.
-- **Testable:** Real login/signup works. Role-based access controls practitioner portal. Auth toggle removed.
+- **Auth:** Install Auth.js v5 (next-auth@5) with Prisma adapter and credentials provider
+- **Schema:** Add User, Account, Session, VerificationToken models to Prisma
+- **Pages:** Real signup (`/signup`) and login (`/login`) pages with email/password
+- **Session:** Replace simulated AuthContext with Auth.js session provider
+- **Role-based access:** Middleware protects `/practitioner/*` and `/account/*` routes
+- **Cleanup:** Remove AuthToggle dev component, remove AuthProvider
+- **Seed:** Default practitioner user (Hector) with hashed password, linked to Practitioner record
+- Git commit + push. Vercel auto-deploys. Add AUTH_SECRET to Vercel.
+- **Testable:** Real signup and login works. Practitioner portal only accessible to practitioner users. Account area only accessible to logged-in users. Auth toggle removed.
 
-### Milestone 9: Google Calendar OAuth Integration (Post-V1)
-Full Google Calendar integration for practitioners. Requires Milestone 8 (database for token storage).
+### Milestone 8: Google Calendar OAuth Integration
+Full Google Calendar integration for practitioners. Requires Milestone 7 (auth for user identity).
 
 - Set up Google Cloud project with Calendar API enabled and OAuth2 consent screen
 - Build OAuth flow: practitioner clicks "Connect Google Calendar" → Google consent screen → callback stores tokens in database
