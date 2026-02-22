@@ -40,7 +40,7 @@ export default function DandelionWatermark({
 
   return (
     <div
-      className={`watermark opacity-[0.04] ${positionClasses[position]} ${sizeClasses[size]} ${className}`}
+      className={`watermark opacity-[0.04] pointer-events-none ${positionClasses[position]} ${sizeClasses[size]} ${className}`}
       aria-hidden="true"
     >
       <DandelionLogo variant="full" className="w-full h-full text-current" />

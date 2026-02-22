@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
@@ -10,7 +9,6 @@ import BotanicalBorder from "@/components/svg/BotanicalBorder";
 import DandelionLogo from "@/components/svg/DandelionLogo";
 
 export default function LoginContent() {
-  const router = useRouter();
   const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,22 +52,18 @@ export default function LoginContent() {
           />
           <div className="relative z-10 mx-auto max-w-md px-4 sm:px-6 lg:px-8 text-center">
             <div className="space-y-4">
-              <button
-                onClick={() =>
-                  router.push(
-                    userRole === "practitioner" ? "/practitioner" : "/account"
-                  )
-                }
-                className="w-full bg-forest-700 text-white py-3 px-6 rounded-lg font-semibold hover:bg-forest-800 transition-colors"
+              <Link
+                href={userRole === "practitioner" ? "/practitioner" : "/account"}
+                className="block w-full bg-forest-700 text-white py-3 px-6 rounded-lg font-semibold hover:bg-forest-800 transition-colors cursor-pointer text-center"
               >
                 Go to{" "}
                 {userRole === "practitioner"
                   ? "Practitioner Dashboard"
                   : "My Account"}
-              </button>
+              </Link>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="w-full bg-white text-forest-700 border border-forest-700 py-3 px-6 rounded-lg font-semibold hover:bg-sage-50 transition-colors"
+                className="w-full bg-white text-forest-700 border border-forest-700 py-3 px-6 rounded-lg font-semibold hover:bg-sage-50 transition-colors cursor-pointer"
               >
                 Sign Out
               </button>
@@ -104,8 +98,11 @@ export default function LoginContent() {
         return;
       }
 
-      router.push("/account");
-      router.refresh();
+      const sessionRes = await fetch("/api/auth/session");
+      const sessionData = await sessionRes.json();
+      const role = sessionData?.user?.role;
+
+      window.location.href = role === "practitioner" ? "/practitioner" : "/account";
     } catch {
       setError("Something went wrong. Please try again.");
       setIsLoading(false);
