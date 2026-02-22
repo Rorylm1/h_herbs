@@ -7,6 +7,8 @@
 */
 
 import ShopContent from "@/components/ShopContent";
+import type { Product } from "@/data/products";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = {
   title: "Herb Shop | Hector's Herbs",
@@ -14,6 +16,7 @@ export const metadata = {
     "Browse our range of quality herbal remedies — tinctures, teas, capsules, and dried herbs. Handpicked and recommended by our practitioners.",
 };
 
-export default function ShopPage() {
-  return <ShopContent />;
+export default async function ShopPage() {
+  const products = (await prisma.product.findMany()) as unknown as Product[];
+  return <ShopContent products={products} />;
 }

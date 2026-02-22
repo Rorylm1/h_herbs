@@ -6,7 +6,8 @@
   homepage, plus a hero banner at the top.
 */
 
-import { practitioners } from "@/data/practitioners";
+import type { Practitioner } from "@/data/practitioners";
+import { prisma } from "@/lib/prisma";
 import PractitionerCard from "@/components/PractitionerCard";
 import SectionHeading from "@/components/SectionHeading";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
@@ -18,7 +19,8 @@ export const metadata = {
     "Meet our team of qualified naturopathic herbalists. Each practitioner brings unique expertise to help you on your health journey.",
 };
 
-export default function HerbalistsPage() {
+export default async function HerbalistsPage() {
+  const practitioners = (await prisma.practitioner.findMany()) as unknown as Practitioner[];
   return (
     <>
       {/* Page hero */}

@@ -14,25 +14,24 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { products } from "@/data/products";
-import { practitioners } from "@/data/practitioners";
+import { prisma } from "@/lib/prisma";
 import AddToBasketButton from "@/components/AddToBasketButton";
 import ProductCard from "@/components/ProductCard";
+import type { Product } from "@/data/products";
 import LatinName from "@/components/LatinName";
 
-/* Pre-build a page for each product */
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const products = await prisma.product.findMany({ select: { slug: true } });
   return products.map((p) => ({ slug: p.slug }));
 }
 
-/* Dynamic SEO metadata */
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = products.find((p) => p.slug === slug);
+  const product = await prisma.product.findUnique({ where: { slug } });
   if (!product) return {};
   return {
     title: `${product.name} | Hector's Herbs`,
@@ -46,21 +45,21 @@ export default async function ProductDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = products.find((p) => p.slug === slug);
+  const product = await prisma.product.findUnique({
+    where: { slug },
+    include: { practitioner: true },
+  });
 
   if (!product) {
     notFound();
   }
 
-  // Find the recommending practitioner (if any)
-  const recommender = product.recommendedBy
-    ? practitioners.find((p) => p.slug === product.recommendedBy)
-    : null;
+  const recommender = product.practitioner;
 
-  // Related products (same category, excluding this one)
-  const relatedProducts = products
-    .filter((p) => p.category === product.category && p.slug !== product.slug)
-    .slice(0, 3);
+  const relatedProducts = (await prisma.product.findMany({
+    where: { category: product.category, slug: { not: slug } },
+    take: 3,
+  })) as unknown as Product[];
 
   return (
     <>

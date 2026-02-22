@@ -8,14 +8,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { Article } from "@/data/articles";
-import { practitioners } from "@/data/practitioners";
 import BotanicalBorder from "@/components/svg/BotanicalBorder";
 
-export default function ArticleCard({ article }: { article: Article }) {
-  // Look up the author's name from the practitioners data
-  const author = practitioners.find((p) => p.slug === article.author);
+export type ArticleCardData = {
+  slug: string;
+  title: string;
+  author: string;
+  authorName?: string;
+  category: string;
+  featuredImage: string;
+  excerpt: string;
+  content: string;
+  publishedDate: string | Date;
+};
 
+export default function ArticleCard({ article }: { article: ArticleCardData }) {
   return (
     <Link
       href={`/learn/${article.slug}`}
@@ -46,7 +53,7 @@ export default function ArticleCard({ article }: { article: Article }) {
 
         {/* Author + date */}
         <p className="mt-2 text-xs text-muted">
-          By {author?.name ?? "Unknown"} &middot;{" "}
+          By {article.authorName ?? "Unknown"} &middot;{" "}
           {new Date(article.publishedDate).toLocaleDateString("en-GB", {
             day: "numeric",
             month: "long",

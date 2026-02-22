@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── PRACTITIONERS ──────────────────────────────────────────
+model Practitioner {
+  slug           String   @id
+  name           String
+  title          String
+  photo          String
+  instagram      String   @default("")
+  specialities   String[]
+  tagline        String
+  bio            String
+  qualifications String[]
+  certifications Json     @default("[]") // Array of { body, abbreviation, type, year? }
+  approach       String
+  services       Json     @default("[]") // Array of { name, duration, price, description }
+
+  articles      Article[]
+  testimonials  Testimonial[]
+  bookings      Booking[]
+  availability  Availability[]
+  products      Product[]      @relation("RecommendedBy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── PRODUCTS ───────────────────────────────────────────────
+model Product {
+  slug             String   @id
+  name             String
+  category         String   // "Tinctures" | "Teas" | "Capsules" | "Dried Herbs"
+  concerns         String[]
+  price            Float
+  image            String
+  shortDescription String
+  fullDescription  String
+  ingredients      String
+  usage            String
+  latinName        String?
+  recommendedBy    String?
+
+  practitioner Practitioner? @relation("RecommendedBy", fields: [recommendedBy], references: [slug])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── ARTICLES ───────────────────────────────────────────────
+model Article {
+  slug          String   @id
+  title         String
+  authorSlug    String
+  category      String   // "Herbal Medicine" | "Nutrition" | "Holistic Living" | "Seasonal Wellness"
+  featuredImage String
+  excerpt       String
+  content       String
+  publishedDate DateTime
+  status        String   @default("published") // "draft" | "published"
+
+  author Practitioner @relation(fields: [authorSlug], references: [slug])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── TESTIMONIALS ───────────────────────────────────────────
+model Testimonial {
+  id               String  @id @default(cuid())
+  clientName       String
+  text             String
+  condition        String
+  practitionerSlug String
+
+  practitioner Practitioner @relation(fields: [practitionerSlug], references: [slug])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── BOOKINGS ───────────────────────────────────────────────
+model Booking {
+  id               String   @id @default(cuid())
+  practitionerSlug String
+  clientName       String   @default("Sarah Mitchell")
+  service          String
+  date             String   // ISO date string YYYY-MM-DD
+  time             String   // HH:MM
+  status           String   @default("upcoming") // "upcoming" | "completed" | "cancelled"
+  notes            String?
+
+  practitioner Practitioner @relation(fields: [practitionerSlug], references: [slug])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── ORDERS ─────────────────────────────────────────────────
+model Order {
+  id             String   @id
+  date           String   // ISO date string
+  status         String   @default("processing") // "processing" | "shipped" | "delivered"
+  items          Json     // Array of { productSlug, name, quantity, price }
+  total          Float
+  trackingNumber String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── PRESCRIPTIONS ──────────────────────────────────────────
+model Prescription {
+  id               String @id
+  practitionerSlug String
+  date             String // ISO date string
+  condition        String
+  notes            String
+  items            Json   // Array of { herb, productSlug?, form, dosage, duration }
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── AVAILABILITY ───────────────────────────────────────────
+model Availability {
+  id               String  @id @default(cuid())
+  practitionerSlug String
+  dayOfWeek        Int     // 0=Sunday, 1=Monday, ..., 6=Saturday
+  startTime        String  // HH:MM
+  endTime          String  // HH:MM
+  isAvailable      Boolean @default(true)
+
+  practitioner Practitioner @relation(fields: [practitionerSlug], references: [slug])
+
+  @@unique([practitionerSlug, dayOfWeek])
+}
+
+// ─── SITE IMAGES ────────────────────────────────────────────
+model SiteImage {
+  id     String @id @default(cuid())
+  key    String @unique // e.g. "homepage-hero", "shop-hero"
+  url    String
+  alt    String @default("")
+  label  String @default("") // Human-readable name for the admin UI
+
+  updatedAt DateTime @updatedAt
+}

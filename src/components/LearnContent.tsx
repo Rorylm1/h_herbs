@@ -14,7 +14,7 @@
 */
 
 import { useState, useMemo } from "react";
-import { articles } from "@/data/articles";
+import type { ArticleCardData } from "./ArticleCard";
 import ArticleCard from "./ArticleCard";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
@@ -27,13 +27,17 @@ const categories = [
   "Seasonal Wellness",
 ] as const;
 
-export default function LearnContent() {
+export default function LearnContent({
+  articles,
+}: {
+  articles: ArticleCardData[];
+}) {
   const [activeCategory, setActiveCategory] = useState<string>("All");
 
   const filteredArticles = useMemo(() => {
     if (activeCategory === "All") return articles;
     return articles.filter((a) => a.category === activeCategory);
-  }, [activeCategory]);
+  }, [articles, activeCategory]);
 
   return (
     <>

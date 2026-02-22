@@ -14,12 +14,12 @@
 */
 
 import { useState, useMemo } from "react";
-import { products } from "@/data/products";
+import type { Product } from "@/data/products";
 import ProductCard from "./ProductCard";
 import FilterSidebar from "./FilterSidebar";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 
-export default function ShopContent() {
+export default function ShopContent({ products }: { products: Product[] }) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedConcerns, setSelectedConcerns] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
@@ -29,7 +29,7 @@ export default function ShopContent() {
     const concerns = new Set<string>();
     products.forEach((p) => p.concerns.forEach((c) => concerns.add(c)));
     return Array.from(concerns).sort();
-  }, []);
+  }, [products]);
 
   // Filter products based on selections
   const filteredProducts = useMemo(() => {
@@ -46,7 +46,7 @@ export default function ShopContent() {
         return false;
       return true;
     });
-  }, [selectedCategories, selectedConcerns]);
+  }, [products, selectedCategories, selectedConcerns]);
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) =>

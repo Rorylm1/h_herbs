@@ -17,8 +17,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { articles } from "@/data/articles";
-import { practitioners } from "@/data/practitioners";
+import { prisma } from "@/lib/prisma";
 import ArticleCard from "@/components/ArticleCard";
 import SectionHeading from "@/components/SectionHeading";
 import BotanicalBorder from "@/components/svg/BotanicalBorder";
@@ -68,7 +67,8 @@ function renderTextWithBold(text: string): React.ReactNode {
 
 /* ── SSG functions ──────────────────────────────────────────── */
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const articles = await prisma.article.findMany({ select: { slug: true } });
   return articles.map((a) => ({ slug: a.slug }));
 }
 
@@ -78,7 +78,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = articles.find((a) => a.slug === slug);
+  const article = await prisma.article.findUnique({ where: { slug } });
   if (!article) return {};
   return {
     title: `${article.title} | Hector's Herbs`,
@@ -94,18 +94,34 @@ export default async function ArticleDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = articles.find((a) => a.slug === slug);
+  const article = await prisma.article.findUnique({
+    where: { slug },
+    include: { author: true },
+  });
 
   if (!article) {
     notFound();
   }
 
-  const author = practitioners.find((p) => p.slug === article.author);
+  const author = article.author;
 
-  // Related articles: same category, excluding this one, max 3
-  const relatedArticles = articles
-    .filter((a) => a.category === article.category && a.slug !== article.slug)
-    .slice(0, 3);
+  const dbRelated = await prisma.article.findMany({
+    where: { category: article.category, slug: { not: slug } },
+    take: 3,
+    include: { author: true },
+  });
+
+  const relatedArticles = dbRelated.map((a) => ({
+    slug: a.slug,
+    title: a.title,
+    author: a.authorSlug,
+    authorName: a.author.name,
+    category: a.category,
+    featuredImage: a.featuredImage,
+    excerpt: a.excerpt,
+    content: a.content,
+    publishedDate: a.publishedDate.toISOString(),
+  }));
 
   const contentBlocks = parseArticleContent(article.content);
 

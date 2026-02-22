@@ -18,7 +18,7 @@ import { useAuth, type AuthRole } from "@/context/AuthContext";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
 import BotanicalBorder from "@/components/svg/BotanicalBorder";
-import { DandelionLogo } from "@/components/svg/DandelionLogo";
+import DandelionLogo from "@/components/svg/DandelionLogo";
 
 export default function LoginContent() {
   const router = useRouter();

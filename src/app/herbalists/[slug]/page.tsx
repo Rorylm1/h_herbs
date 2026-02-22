@@ -15,8 +15,8 @@
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { practitioners } from "@/data/practitioners";
-import { articles } from "@/data/articles";
+import { prisma } from "@/lib/prisma";
+import type { Certification, Service, Practitioner } from "@/data/practitioners";
 import PractitionerHero from "@/components/PractitionerHero";
 import ServicesTable from "@/components/ServicesTable";
 import ReviewCard from "@/components/ReviewCard";
@@ -25,25 +25,22 @@ import CertificationsBadges from "@/components/CertificationsBadges";
 import ArticleCard from "@/components/ArticleCard";
 import SectionHeading from "@/components/SectionHeading";
 
-/*
-  generateStaticParams — runs at BUILD time, tells Next.js
-  which slugs to pre-render. One page per practitioner.
-*/
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const practitioners = await prisma.practitioner.findMany({
+    select: { slug: true },
+  });
   return practitioners.map((p) => ({ slug: p.slug }));
 }
 
-/*
-  generateMetadata — sets the page title/description dynamically
-  based on which practitioner we're viewing. Good for SEO.
-*/
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const practitioner = practitioners.find((p) => p.slug === slug);
+  const practitioner = await prisma.practitioner.findUnique({
+    where: { slug },
+  });
   if (!practitioner) return {};
   return {
     title: `${practitioner.name} — ${practitioner.title} | Hector's Herbs`,
@@ -57,17 +54,47 @@ export default async function PractitionerProfilePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const practitioner = practitioners.find((p) => p.slug === slug);
+  const dbPractitioner = await prisma.practitioner.findUnique({
+    where: { slug },
+    include: {
+      testimonials: true,
+      articles: { include: { author: true } },
+    },
+  });
 
-  // If no practitioner matches the slug, show a 404 page
-  if (!practitioner) {
+  if (!dbPractitioner) {
     notFound();
   }
 
-  // Find articles authored by this practitioner
-  const practitionerArticles = articles.filter(
-    (a) => a.author === practitioner.slug
-  );
+  const certifications = dbPractitioner.certifications as unknown as Certification[];
+  const services = dbPractitioner.services as unknown as Service[];
+
+  const reviews = dbPractitioner.testimonials.map((t) => ({
+    clientName: t.clientName,
+    rating: 5,
+    text: t.text,
+    date: t.createdAt.toISOString().split("T")[0],
+  }));
+
+  const practitioner = {
+    ...dbPractitioner,
+    certifications,
+    services,
+    reviews,
+    articleSlugs: dbPractitioner.articles.map((a) => a.slug),
+  } as unknown as Practitioner;
+
+  const practitionerArticles = dbPractitioner.articles.map((a) => ({
+    slug: a.slug,
+    title: a.title,
+    author: a.authorSlug,
+    authorName: a.author.name,
+    category: a.category,
+    featuredImage: a.featuredImage,
+    excerpt: a.excerpt,
+    content: a.content,
+    publishedDate: a.publishedDate.toISOString(),
+  }));
 
   return (
     <>

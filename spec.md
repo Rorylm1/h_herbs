@@ -384,43 +384,37 @@ type Prescription = {
 - Git commit + push. Vercel auto-deploys.
 - **Testable:** Toggle to client logged-in state, view dashboard, browse bookings/prescriptions/orders. Click "Order These Herbs" on a prescription to see items added to cart.
 
-### Milestone 6: Practitioner Portal
-- Practitioner dashboard (`/practitioner`)
-- Availability management page with weekly calendar editor
-- Appointments list page
-- Prescription writing form
-- Profile editor (edit own bio, qualifications, photo)
-- Article editor (write/edit articles)
-- Practitioner sidebar navigation
+### Milestone 6: Practitioner Portal + Database (expanded — absorbs M7 visual work already done, M8 database)
+This milestone was expanded to include the database infrastructure (originally M8) so that practitioner edits actually persist. Prescription writing deferred.
+
+- **Database:** Supabase Postgres with Prisma ORM + `@prisma/adapter-pg` driver adapter. Schema covers all entities. Seed script migrates existing dummy data.
+- **Image storage:** Supabase Storage buckets for product-images, article-images, practitioner-photos, site-images.
+- **Public page migration:** All pages swap from static `.ts` data files to database queries via `src/lib/prisma.ts`.
+- **Practitioner portal pages:**
+  - `/practitioner` — Dashboard with quick stats, recent activity, quick-action buttons
+  - `/practitioner/shop` — Full CRUD for products (list, create, edit, delete with image upload). Highest priority feature.
+  - `/practitioner/profile` — Edit own bio, qualifications, specialities, services, photo
+  - `/practitioner/articles` — Full CRUD for articles (list, create, edit, delete with featured image). Draft/published status.
+  - `/practitioner/availability` — Weekly calendar editor (toggle days, set times)
+  - `/practitioner/appointments` — List with status management (confirm, complete, cancel)
+  - `/practitioner/testimonials` — Add, edit, delete client testimonials (feeds homepage carousel + profile reviews)
+  - `/practitioner/images` — Site image manager (hero banners, section photos). Media library with upload/replace/delete.
+- **Portal components:** `PractitionerSidebar`, `ProductForm`, `ArticleEditor`, `ProfileEditor`, `AvailabilityEditor`, `AppointmentList`, `ImageUpload`
+- **API routes:** CRUD routes for products, articles, practitioners, availability, appointments, testimonials, site-images, and image upload
+- Git commit + push. Vercel auto-deploys. Add Supabase env vars to Vercel.
+- **Testable:** Toggle to practitioner state. Manage products (add/edit/delete with images), edit profile, write/publish articles, manage availability, view appointments, manage testimonials, update site images. All changes persist in database and appear on public site immediately.
+
+### Milestone 7: Visual Design Enhancement ✅
+(Completed earlier — botanical SVGs, dandelion branding, organic transitions throughout the site.)
+
+### Milestone 8: Real Authentication (Post-V1)
+Database infrastructure moved to M6. This milestone now focuses solely on replacing simulated auth with real authentication.
+
+- **Auth:** Install and configure Auth.js (NextAuth.js) — email/password and/or Google sign-in
+- **Role-based access:** Real client vs practitioner roles stored in database
+- **Replace auth toggle:** Remove simulated AuthContext, wire up real auth state
 - Git commit + push. Vercel auto-deploys.
-- **Testable:** Toggle to practitioner logged-in state. View practitioner dashboard, manage availability (toggle slots), browse appointments, write a prescription, edit profile, create an article draft. All visual/mock.
-
-### Milestone 7: Visual Design Enhancement
-A visual-only pass across the entire site based on Hector's feedback. No routing, data models, or page structure changes — just richer botanical visuals.
-
-- **SVG Assets:** Create dandelion logo, botanical dividers, border accents, repeatable patterns, organic section transitions, individual herb illustrations.
-- **New Components:** `DandelionWatermark`, `VideoPlaceholder`, `LatinName`, and all botanical SVG components in `src/components/svg/`.
-- **Layout:** Dandelion icon added to `SiteHeader` and `SiteFooter` logos. Footer gains botanical pattern background and watermark. `SectionHeading` upgraded to `BotanicalDivider`.
-- **Homepage:** Richer `HeroBanner` with botanical overlays. New video placeholder section. Organic wave transitions between sections. Testimonials with botanical framing. Newsletter CTA with pattern background and brand quote.
-- **Practitioners:** Botanical accents on `PractitionerCard`, `PractitionerHero`, directory and profile pages. Organic dividers between profile sections.
-- **Shop:** `latinName` field added to `Product` type. Latin names displayed on `ProductCard` and product detail pages. Unique Unsplash product images. Botanical framing on product detail.
-- **Booking & Cart:** Organic vine connectors in `BookingStepper`. Botanical accents on booking confirmation and checkout success. Dandelion watermark on empty cart state.
-- **Typography:** Latin botanical names in italic serif throughout (via `LatinName` component). Brand quotes from Hippocrates and Thoreau.
-- **Inspiration:** Pukka Herbs (pukkaherbs.com) — rich hand-drawn botanical illustrations integrated into the brand identity. Hector's current site (hectorsherbs.com) — herb photography with Latin names (*Arctium lappa*, *Calendula officinalis*, etc.), ANP badge, naturopathic principles.
-- Git commit + push. Vercel auto-deploys.
-- **Testable:** All existing pages work identically but now feature botanical illustrations, dandelion branding throughout, organic section transitions, Latin names on products, and a video placeholder on the homepage. Visual richness without structural changes.
-
-### Milestone 8: Database, Auth & Image Storage (Post-V1)
-The transition from prototype to real application. This is the infrastructure foundation that everything beyond V1 depends on.
-
-- **Database:** Set up hosted Postgres (Vercel Postgres, Supabase, or Neon) with Prisma or Drizzle ORM
-- **Schema:** Migrate all dummy data into database tables — practitioners, products, articles, bookings, prescriptions, orders, users
-- **Auth:** Replace simulated auth toggle with real authentication via Auth.js (NextAuth.js) — email/password and/or Google sign-in, with role-based access (client vs practitioner)
-- **Image storage:** Set up Cloudinary, Vercel Blob, or AWS S3 for uploaded images (practitioner photos, product images, article featured images). `next/image` continues to handle frontend optimisation.
-- **Data migration:** Seed the database with existing dummy data so the transition is seamless
-- **API layer:** Replace direct TypeScript data imports with database queries (server components can query directly, client components via API routes)
-- Git commit + push. Vercel auto-deploys.
-- **Testable:** All existing pages work identically but are now backed by real database queries. Real login/signup works. Images can be uploaded and persisted. Data survives page refreshes and deploys.
+- **Testable:** Real login/signup works. Role-based access controls practitioner portal. Auth toggle removed.
 
 ### Milestone 9: Google Calendar OAuth Integration (Post-V1)
 Full Google Calendar integration for practitioners. Requires Milestone 8 (database for token storage).

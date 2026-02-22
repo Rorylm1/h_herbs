@@ -9,10 +9,20 @@
 */
 
 import { useState, useEffect } from "react";
-import { testimonials } from "@/data/testimonials";
 import QuoteLeaf from "@/components/svg/QuoteLeaf";
 
-export default function TestimonialCarousel() {
+type TestimonialData = {
+  clientName: string;
+  text: string;
+  condition: string;
+  practitioner: string;
+};
+
+export default function TestimonialCarousel({
+  testimonials,
+}: {
+  testimonials: TestimonialData[];
+}) {
   const [current, setCurrent] = useState(0);
 
   // Auto-advance every 6 seconds

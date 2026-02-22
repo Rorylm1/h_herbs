@@ -209,7 +209,79 @@
 ---
 
 # Milestone 6: Practitioner Portal + Database
-_(tasks to be detailed when M5 is complete)_
+
+## Database Infrastructure (Supabase + Prisma)
+- [x] Install `prisma`, `@prisma/client`, `@prisma/adapter-pg`, `pg`, `@supabase/supabase-js`
+- [x] Configure `prisma.config.ts` with Supabase Postgres connection
+- [x] Design full database schema (`prisma/schema.prisma`) — Practitioner, Product, Article, Testimonial, Booking, Order, Prescription, Availability, SiteImage
+- [x] Run `prisma db push` — create tables in Supabase
+- [x] Write seed script (`prisma/seed.ts`) — populate with existing dummy data
+- [x] Run seed — all data migrated to database
+- [x] Create Prisma client singleton (`src/lib/prisma.ts`) with PG adapter
+- [x] Create Supabase client utility (`src/lib/supabase.ts`)
+- [x] Add `.env.example` with required env var template
+- [x] Add `db:push`, `db:seed`, `db:generate`, `db:studio` scripts to package.json
+
+## Image Storage (Supabase Storage)
+- [ ] Create storage buckets: product-images, article-images, practitioner-photos, site-images
+- [ ] Build reusable `ImageUpload` component with drag-and-drop
+- [ ] Build `/api/upload` route for Supabase Storage uploads
+
+## Migrate Public Pages to Database
+- [ ] Migrate `/shop`, `/shop/[slug]` — query Product table
+- [ ] Migrate `/herbalists`, `/herbalists/[slug]` — query Practitioner table
+- [ ] Migrate `/learn`, `/learn/[slug]` — query Article table
+- [ ] Migrate homepage sections (featured practitioners, latest articles, testimonials)
+- [ ] Migrate `/account/*` pages — query Booking, Order, Prescription tables
+- [ ] Remove static data files after migration verified
+
+## Practitioner Portal — Layout & Navigation
+- [ ] Build `PractitionerSidebar` navigation component
+- [ ] Create portal layout with auth guard (`isPractitioner` check)
+
+## Practitioner Portal — Shop Management (highest priority)
+- [ ] Build `/practitioner/shop` — product list with search/filter, edit/delete actions
+- [ ] Build `/practitioner/shop/new` — create product form with image upload
+- [ ] Build `/practitioner/shop/[slug]/edit` — edit product form
+- [ ] Build `/api/products` CRUD API routes
+- [ ] Build delete confirmation modal
+
+## Practitioner Portal — Profile Editor
+- [ ] Build `/practitioner/profile` — edit bio, qualifications, specialities, services, photo
+- [ ] Build `/api/practitioners/[slug]` update API route
+
+## Practitioner Portal — Article Management
+- [ ] Build `/practitioner/articles` — article list with draft/published badges
+- [ ] Build `/practitioner/articles/new` — article editor with featured image upload
+- [ ] Build `/practitioner/articles/[slug]/edit` — edit article
+- [ ] Build `/api/articles` CRUD API routes
+- [ ] Publish/unpublish toggle, delete with confirmation
+
+## Practitioner Portal — Availability Management
+- [ ] Build `/practitioner/availability` — weekly calendar grid
+- [ ] Toggle days on/off, set start/end times
+- [ ] Build `/api/availability` CRUD API route
+
+## Practitioner Portal — Appointments
+- [ ] Build `/practitioner/appointments` — list with filter tabs (upcoming/past/all)
+- [ ] Status management (confirm, complete, cancel)
+- [ ] Build `/api/appointments/[id]` status update route
+
+## Practitioner Portal — Testimonial Management
+- [ ] Build `/practitioner/testimonials` — list, add, edit, delete testimonials
+- [ ] Build `/api/testimonials` CRUD API routes
+
+## Practitioner Portal — Site Images
+- [ ] Build `/practitioner/images` — media library for hero/banner images
+- [ ] Upload, replace, delete images
+- [ ] Build `/api/site-images` CRUD API routes
+
+## Practitioner Portal — Dashboard
+- [ ] Build `/practitioner` dashboard — quick stats, recent activity, quick-action buttons
+
+## Git & Deploy
+- [ ] Git commit + push (Vercel auto-deploys)
+- [ ] Add Supabase env vars to Vercel project settings
 
 ---
 

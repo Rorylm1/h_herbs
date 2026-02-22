@@ -24,13 +24,40 @@ import VideoPlaceholder from "@/components/VideoPlaceholder";
 import OrganicDivider from "@/components/svg/OrganicDivider";
 import BotanicalPattern from "@/components/svg/BotanicalPattern";
 import DandelionWatermark from "@/components/DandelionWatermark";
-import { practitioners } from "@/data/practitioners";
-import { articles } from "@/data/articles";
+import type { Practitioner } from "@/data/practitioners";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
-  // Show first 3 practitioners and latest 3 articles on homepage
-  const featuredPractitioners = practitioners.slice(0, 3);
-  const latestArticles = articles.slice(0, 3);
+export default async function Home() {
+  const [dbPractitioners, dbArticles, dbTestimonials] = await Promise.all([
+    prisma.practitioner.findMany({ take: 3 }),
+    prisma.article.findMany({
+      take: 3,
+      orderBy: { publishedDate: "desc" },
+      include: { author: true },
+    }),
+    prisma.testimonial.findMany({ include: { practitioner: true } }),
+  ]);
+
+  const featuredPractitioners = dbPractitioners as unknown as Practitioner[];
+
+  const latestArticles = dbArticles.map((a) => ({
+    slug: a.slug,
+    title: a.title,
+    author: a.authorSlug,
+    authorName: a.author.name,
+    category: a.category,
+    featuredImage: a.featuredImage,
+    excerpt: a.excerpt,
+    content: a.content,
+    publishedDate: a.publishedDate.toISOString(),
+  }));
+
+  const testimonials = dbTestimonials.map((t) => ({
+    clientName: t.clientName,
+    text: t.text,
+    condition: t.condition,
+    practitioner: t.practitioner.name,
+  }));
 
   return (
     <>
@@ -152,7 +179,7 @@ export default function Home() {
             title="What Our Clients Say"
             subtitle="Real stories from people who've experienced the power of personalised herbal medicine."
           />
-          <TestimonialCarousel />
+          <TestimonialCarousel testimonials={testimonials} />
         </div>
       </section>
 

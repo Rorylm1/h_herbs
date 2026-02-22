@@ -36,16 +36,21 @@ export default function BookingCard({ booking }: BookingCardProps) {
   };
 
   // Build calendar event data for upcoming bookings
-  const calendarEvent = booking.status === "upcoming" && practitioner
-    ? {
-        title: `${booking.service} with ${practitioner.name}`,
-        startDate: booking.date,
-        startTime: booking.time,
-        durationMinutes: booking.service.includes("Initial") ? 60 : 30,
-        location: "12 Warrington Crescent, London W9 1EB",
-        description: booking.notes || `Your ${booking.service.toLowerCase()} at Hector's Herbs`,
-      }
-    : null;
+  const calendarEvent = (() => {
+    if (booking.status !== "upcoming" || !practitioner) return null;
+    const [hours, minutes] = booking.time.split(":").map(Number);
+    const start = new Date(booking.date);
+    start.setHours(hours, minutes, 0, 0);
+    const durationMinutes = booking.service.includes("Initial") ? 60 : 30;
+    const end = new Date(start.getTime() + durationMinutes * 60_000);
+    return {
+      title: `${booking.service} with ${practitioner.name}`,
+      startDate: start,
+      endDate: end,
+      location: "12 Warrington Crescent, London W9 1EB",
+      description: booking.notes || `Your ${booking.service.toLowerCase()} at Hector's Herbs`,
+    };
+  })();
 
   return (
     <div className="bg-white rounded-xl border border-sage-100 p-5 hover:shadow-card transition-shadow">
@@ -104,22 +109,11 @@ export default function BookingCard({ booking }: BookingCardProps) {
               <AddToCalendarLink
                 title={calendarEvent.title}
                 startDate={calendarEvent.startDate}
-                startTime={calendarEvent.startTime}
-                durationMinutes={calendarEvent.durationMinutes}
+                endDate={calendarEvent.endDate}
                 location={calendarEvent.location}
                 description={calendarEvent.description}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-forest-700 bg-sage-50 rounded-lg hover:bg-sage-100 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                Add to Calendar
-              </AddToCalendarLink>
+                label="Add to Calendar"
+              />
             )}
             <button
               type="button"
