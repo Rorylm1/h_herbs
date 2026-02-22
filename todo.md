@@ -300,47 +300,48 @@ _(Completed out of order before M6 — botanical SVGs, dandelion branding, organ
 
 ---
 
-# Milestone 7: Real Authentication
+# Milestone 7: Real Authentication ✅
 
 ## Prisma Schema Updates
-- [ ] Add `User` model (id, email, passwordHash, name, role, practitionerSlug?)
-- [ ] Add `Account`, `Session`, `VerificationToken` models (Auth.js standard)
-- [ ] Run `prisma db push` to create new tables
+- [x] Add `User` model (id, email, passwordHash, name, role, practitionerSlug)
+- [x] Add `Account`, `Session`, `VerificationToken` models (Auth.js standard)
+- [x] Run `prisma db push` to create new tables
 
 ## Auth.js Setup
-- [ ] Install `next-auth@5` (Auth.js v5) and `@auth/prisma-adapter`
-- [ ] Create `auth.ts` config — Prisma adapter, credentials provider
-- [ ] Create `/api/auth/[...nextauth]` route handler
-- [ ] Set up `AUTH_SECRET` env var (local + Vercel)
-- [ ] Add bcrypt for password hashing
+- [x] Install `next-auth@5` (Auth.js v5) and `@auth/prisma-adapter`
+- [x] Create `auth.ts` config — Prisma adapter, credentials provider, JWT callbacks
+- [x] Create `/api/auth/[...nextauth]` route handler
+- [x] Set up `AUTH_SECRET` env var (local + Vercel)
+- [x] Add bcrypt for password hashing
 
 ## Signup & Login Pages
-- [ ] Build `/signup` page — name, email, password, role selector (client/practitioner)
-- [ ] Build new `/login` page — replace mock login with real email/password form
-- [ ] Handle form validation and error messages
-- [ ] Redirect to dashboard after successful login
+- [x] Build `/signup` page with `/api/auth/signup` endpoint
+- [x] Build `/login` page with real email/password form
+- [x] Handle form validation and error messages
+- [x] Role-aware redirect after successful login (practitioner → /practitioner, client → /account)
 
 ## Replace Simulated Auth
-- [ ] Replace `AuthContext` with Auth.js session provider
-- [ ] Update `useAuth` hook to use `useSession()` from Auth.js
-- [ ] Update `SiteHeader` to show real user name and avatar
-- [ ] Update all `isPractitioner` / `isClient` checks to use real session role
-- [ ] Remove `AuthToggle` dev component
-- [ ] Remove `AuthProvider` from `Providers.tsx`
+- [x] Replace `AuthContext` with Auth.js SessionProvider
+- [x] Update all components to use `useSession()` from next-auth/react
+- [x] Update `SiteHeader` — user dropdown with dashboard link and sign-out button
+- [x] Update all `isPractitioner` / `isClient` checks to use real session role
+- [x] Remove `AuthToggle` dev component
+- [x] Remove `AuthProvider` and `AuthContext` from codebase
 
 ## Route Protection
-- [ ] Add Next.js middleware (`middleware.ts`) for auth checks
-- [ ] Protect `/practitioner/*` routes — redirect to login if not practitioner
-- [ ] Protect `/account/*` routes — redirect to login if not logged in
-- [ ] Protect API routes — return 401 for unauthenticated requests
+- [x] Server-side `auth()` checks in layout components (`practitioner/layout.tsx`, `account/layout.tsx`)
+- [x] Protect `/practitioner/*` routes — redirect to login if not practitioner
+- [x] Protect `/account/*` routes — redirect to login if not logged in
+- [x] Protect mutating API routes — return 401 for unauthenticated requests
 
 ## Seed Admin User
-- [ ] Create seed for default practitioner user (Hector) with hashed password
-- [ ] Link practitioner user to existing Practitioner record via slug
+- [x] Create `prisma/seed-users.ts` for default users with hashed passwords
+- [x] Practitioner user (Hector) linked to Practitioner record via slug
+- [x] Client user (Sarah Mitchell) for testing
 
 ## Git & Deploy
-- [ ] Git commit + push (Vercel auto-deploys)
-- [ ] Add `AUTH_SECRET` env var to Vercel
+- [x] Git commit + push (Vercel auto-deploys)
+- [x] Add `AUTH_SECRET` env var to Vercel
 
 ---
 
@@ -348,20 +349,88 @@ _(Completed out of order before M6 — botanical SVGs, dandelion branding, organ
 
 ## Google Cloud Setup
 - [ ] Create Google Cloud project and enable Calendar API
-- [ ] Configure OAuth2 consent screen and credentials
-- [ ] Set up environment variables for Google OAuth
+- [ ] Configure OAuth2 consent screen (external, limited to test users)
+- [ ] Create OAuth2 web application credentials
+- [ ] Set redirect URI: `{SITE_URL}/api/google/callback`
+- [ ] Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` to `.env.local` and Vercel
+
+## Database
+- [ ] Add `GoogleCalendarToken` model to Prisma schema (practitionerId, accessToken, refreshToken, expiresAt, calendarId)
+- [ ] Run `prisma db push` to create table
 
 ## OAuth Flow
-- [ ] Build "Connect Google Calendar" button in practitioner portal
-- [ ] Implement OAuth callback route — exchange code for tokens, store in database
-- [ ] Handle token refresh (access tokens expire)
-- [ ] Build "Disconnect Calendar" option
+- [ ] Build `/api/google/auth` — generates Google OAuth URL, redirects practitioner to Google consent screen
+- [ ] Build `/api/google/callback` — exchanges auth code for tokens, stores in database
+- [ ] Build `/api/google/disconnect` — removes stored tokens for practitioner
+- [ ] Build token refresh utility — auto-refreshes expired access tokens
+- [ ] Add "Connect Google Calendar" UI to practitioner portal (profile or dedicated settings page)
+- [ ] Show connected state: connected email, disconnect button
+- [ ] Show disconnected state: connect button with explanation
 
-## Calendar Sync
-- [ ] Auto-create Google Calendar events on booking confirmation
-- [ ] Pull real free/busy data for practitioner availability page
-- [ ] Handle edge cases (calendar disconnected, token expired, API errors)
+## Calendar Sync — Booking → Event
+- [ ] On booking confirmation, call Google Calendar API to create event in practitioner's calendar
+- [ ] Event includes: client name, service type, date/time, duration, notes
+- [ ] Fall back to "Add to Calendar" link if calendar not connected
+- [ ] Handle token expired (auto-refresh and retry)
+- [ ] Handle API errors gracefully (log, don't block booking)
+
+## Calendar Sync — Availability
+- [ ] Query Google Calendar free/busy API for practitioner's connected calendar
+- [ ] Merge with manual availability slots set in the app
+- [ ] Display real conflicts on the availability editor grid
+- [ ] Cache free/busy data to avoid excessive API calls
 
 ## Git & Deploy
 - [ ] Git commit + push (Vercel auto-deploys)
 - [ ] Configure Google OAuth env vars on Vercel
+
+---
+
+# Milestone 9: Visual Design Overhaul
+
+## Image Infrastructure
+- [ ] Implement Supabase Storage image upload (buckets: product-images, article-images, practitioner-photos, hero-banners)
+- [ ] Build `ImageUpload` component — drag-and-drop, preview, crop
+- [ ] Build `/api/upload` route — handles file upload to Supabase Storage
+- [ ] Update product/article/practitioner forms to use `ImageUpload` instead of URL fields
+
+## Source Photography
+- [ ] Source high-quality botanical stock photos (Unsplash/Pexels) for all products
+- [ ] Source practitioner portrait photos (or high-quality stock)
+- [ ] Source hero banner images (herbs, herbal preparations, nature scenes)
+- [ ] Source article featured images matching each article's topic
+- [ ] Update seed data with real image URLs
+
+## Homepage Redesign
+- [ ] Full-bleed hero with real botanical photography and overlay text
+- [ ] Replace generic pathway cards with large photographic sections
+- [ ] Warmer testimonials section
+- [ ] Featured products with real product photography
+- [ ] More breathing room — larger sections, generous white space
+
+## Shop Redesign
+- [ ] Real product photography on all product cards
+- [ ] Larger cards with hover image effects
+- [ ] Product detail pages with image gallery
+- [ ] Warmer card styling — artisanal feel, less corporate
+
+## Practitioner Profiles Redesign
+- [ ] Large hero photos (real or high-quality stock)
+- [ ] Personal storytelling layout matching original site tone
+- [ ] Latin name accents on herb references
+- [ ] Warmer colour treatment — more earth tones
+
+## Article Pages Redesign
+- [ ] Full-width featured images (real botanical photography)
+- [ ] Better reading typography — larger body, generous line height
+- [ ] Author cards with real photos
+
+## Global Design Improvements
+- [ ] Implement `LatinName` component for consistent italic serif botanical names
+- [ ] Richer colour usage — more earth-100/200 warm backgrounds
+- [ ] Better hover states and micro-interactions
+- [ ] Footer redesign — warmer, more personality
+- [ ] Mobile-first photography layouts
+
+## Git & Deploy
+- [ ] Git commit + push (Vercel auto-deploys)

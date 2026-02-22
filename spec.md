@@ -20,7 +20,7 @@
 | `/learn/[slug]` | **Article** | Full article with hero image, author practitioner card (links to their profile), related articles at bottom |
 | `/contact` | **Contact** | Contact form (mock), Google Maps embed (12 Warrington Crescent), address, email, phone, Instagram link |
 
-### Client Area (Simulated — toggle between "logged in" and "logged out" states via a simple UI toggle, no real auth)
+### Client Area (Auth.js — real email/password authentication, JWT sessions)
 
 | Route | Page | Description |
 |-------|------|-------------|
@@ -30,7 +30,7 @@
 | `/account/prescriptions/[id]` | **Prescription Detail** | Herbs prescribed, dosage instructions, practitioner notes, "Order These Herbs" CTA linking to pre-filled cart |
 | `/account/orders` | **My Orders** | Order history with status tracking |
 
-### Practitioner Portal (Simulated — separate login toggle for practitioner role, no real auth)
+### Practitioner Portal (Auth.js — practitioner role required, server-side route protection)
 
 | Route | Page | Description |
 |-------|------|-------------|
@@ -49,7 +49,8 @@
 |-------|------|-------------|
 | `/cart` | **Cart** | Line items, quantities, subtotal, "Proceed to Checkout" button that creates a Stripe Checkout Session and redirects to Stripe's hosted payment page |
 | `/checkout/success` | **Checkout Success** | Post-payment confirmation page. Stripe redirects here after successful payment. Shows order summary and confirmation message. |
-| `/login` | **Login** | Mock login form with role selector: "Client" or "Practitioner". Clicking "Sign In" toggles to the appropriate logged-in state. |
+| `/login` | **Login** | Real email/password login form. Redirects to `/practitioner` or `/account` based on role. |
+| `/signup` | **Sign Up** | Registration form with email, password, name. Creates a real user account. |
 
 ---
 
@@ -407,33 +408,113 @@ This milestone was expanded to include the database infrastructure (originally M
 ### Visual Design Enhancement ✅
 _(Completed out of order before M6 — botanical SVGs, dandelion branding, organic transitions throughout the site.)_
 
-### Milestone 7: Real Authentication
+### Milestone 7: Real Authentication ✅
 Replace simulated auth with real login/signup. Database already in place from M6.
 
-- **Auth:** Install Auth.js v5 (next-auth@5) with Prisma adapter and credentials provider
-- **Schema:** Add User, Account, Session, VerificationToken models to Prisma
-- **Pages:** Real signup (`/signup`) and login (`/login`) pages with email/password
-- **Session:** Replace simulated AuthContext with Auth.js session provider
-- **Role-based access:** Middleware protects `/practitioner/*` and `/account/*` routes
-- **Cleanup:** Remove AuthToggle dev component, remove AuthProvider
-- **Seed:** Default practitioner user (Hector) with hashed password, linked to Practitioner record
-- Git commit + push. Vercel auto-deploys. Add AUTH_SECRET to Vercel.
-- **Testable:** Real signup and login works. Practitioner portal only accessible to practitioner users. Account area only accessible to logged-in users. Auth toggle removed.
+- **Auth:** Auth.js v5 (next-auth@5) with Prisma adapter and credentials provider
+- **Schema:** User model with role, practitionerSlug; JWT session strategy
+- **Pages:** Real signup (`/signup`) and login (`/login`) pages with email/password, role-aware redirect
+- **Session:** Replaced simulated AuthContext with Auth.js SessionProvider
+- **Route protection:** Server-side `auth()` checks in layout components for `/practitioner/*` and `/account/*`
+- **Header:** User dropdown with dashboard link and sign-out button (desktop + mobile)
+- **Cleanup:** Removed AuthToggle, AuthContext, AuthProvider. All components migrated to `useSession()`
+- **Seed:** Default users seeded (`prisma/seed-users.ts`) with hashed passwords, practitioner linked via slug
+- **Security:** All mutating API routes check session. Dashboard API scoped to authenticated practitioner.
+- **Testable:** Real signup and login works. Practitioner portal only accessible to practitioner users. Account area only accessible to logged-in users. Sign-out available from header dropdown.
 
 ### Milestone 8: Google Calendar OAuth Integration
-Full Google Calendar integration for practitioners. Requires Milestone 7 (auth for user identity).
+Full Google Calendar integration for practitioners. Requires Milestone 7 (auth) for user identity and Milestone 6 (database) for token storage.
 
-- Set up Google Cloud project with Calendar API enabled and OAuth2 consent screen
-- Build OAuth flow: practitioner clicks "Connect Google Calendar" → Google consent screen → callback stores tokens in database
-- On booking confirmation: automatically create a Google Calendar event in the practitioner's connected calendar (no click needed)
-- Practitioner availability page pulls real free/busy data from their connected Google Calendar
-- Handle token refresh (access tokens expire, refresh tokens are long-lived)
-- Manage disconnection: practitioner can unlink their calendar
+**Goal:** When a client books a consultation, the event automatically appears in the practitioner's Google Calendar. The practitioner's availability page shows real free/busy data pulled from their calendar.
+
+- **Google Cloud setup:**
+  - Create Google Cloud project, enable Calendar API
+  - Configure OAuth2 consent screen (external, limited to test users initially)
+  - Create OAuth2 credentials (web application type)
+  - Redirect URI: `{SITE_URL}/api/google/callback`
+  - Environment variables: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+
+- **Database:**
+  - Add `GoogleCalendarToken` model to Prisma schema (practitionerId, accessToken, refreshToken, expiresAt, calendarId)
+  - Run `prisma db push`
+
+- **OAuth flow:**
+  - "Connect Google Calendar" button in practitioner portal settings/profile
+  - `/api/google/auth` — generates Google OAuth URL with calendar scope, redirects practitioner
+  - `/api/google/callback` — exchanges auth code for tokens, stores in database
+  - `/api/google/disconnect` — removes stored tokens
+  - Token refresh middleware — automatically refreshes expired access tokens using refresh token
+  - UI: show connected/disconnected state, connected email, disconnect option
+
+- **Booking → Calendar sync:**
+  - When a booking is confirmed via the booking flow, call Google Calendar API to create an event
+  - Event includes: client name, service type, date/time, duration, practitioner notes
+  - Handle edge cases: calendar disconnected (fall back to "Add to Calendar" link), token expired (auto-refresh), API errors (log and continue, don't block booking)
+
+- **Availability sync:**
+  - Practitioner availability page queries Google Calendar free/busy API
+  - Merge with manual availability slots already set in the app
+  - Show real calendar conflicts on the availability grid
+
 - Git commit + push. Vercel auto-deploys.
-- **Testable:** Practitioner connects their Google Calendar in the portal. Client makes a booking. Event appears automatically in the practitioner's Google Calendar. Availability page shows real data.
+- **Testable:** Practitioner connects their Google Calendar in the portal. Client makes a booking. Event appears automatically in the practitioner's Google Calendar. Availability page shows real conflicts from the calendar.
+
+### Milestone 9: Visual Design Overhaul
+Fundamental redesign to match the warm, artisan, photography-driven feel of the original hectorsherbs.com. The current site is functional but generic — this milestone makes it feel like a real herbal practice.
+
+**Reference:** [hectorsherbs.com](https://www.hectorsherbs.com/) — photography-heavy, warm earthy tones, Latin botanical names, personal storytelling, artisanal feel.
+
+**Problem:** The current site uses SVG patterns, placeholder gradients, and generic card layouts. It looks like a template rather than a bespoke herbal practice website.
+
+- **Photography & image infrastructure:**
+  - Implement Supabase Storage image upload (product images, article featured images, practitioner photos, hero banners)
+  - Build `ImageUpload` component with drag-and-drop, preview, and crop
+  - Source high-quality botanical stock photography for default content (Unsplash/Pexels — chamomile, elderberry, nettle, lavender, echinacea, herbs in jars, herbal preparations)
+  - Seed database with real image URLs for all products, practitioners, articles
+  - Update all pages to display real images instead of placeholder gradients
+
+- **Homepage redesign:**
+  - Full-bleed hero with real photography (botanical/herbal imagery), overlay text
+  - Replace generic pathway cards with large photographic sections
+  - Testimonials with real photos or warm styling
+  - Featured products with actual product photography
+  - More breathing room — larger sections, more white space
+
+- **Shop redesign:**
+  - Real product photography (herbs in jars, tincture bottles, tea blends)
+  - Larger product cards with hover effects showing the image
+  - Product detail pages with multiple images, gallery view
+  - Warmer card styling — less corporate, more artisanal
+
+- **Practitioner profiles redesign:**
+  - Large hero photos (real or high-quality stock)
+  - Personal storytelling layout matching original site's tone
+  - Latin name accents on herb references throughout content
+  - Warmer colour treatment — more earth tones, less stark white
+
+- **Article pages redesign:**
+  - Full-width featured images (real botanical photography)
+  - Better reading typography — slightly larger body, more generous line height
+  - Author cards with real photos
+
+- **Global design improvements:**
+  - Implement `LatinName` component for consistent italic serif botanical names (e.g., *Matricaria recutita*)
+  - Richer colour usage — more earth-100/200 warm backgrounds, less stark sage-50
+  - Subtle texture overlays on hero sections (paper grain, botanical watercolour wash)
+  - Better hover states and micro-interactions
+  - Footer redesign — warmer, more personality, link to Instagram
+
+- **Mobile polish:**
+  - Photography-first mobile layouts
+  - Touch-friendly image galleries
+  - Responsive hero images that don't crop awkwardly
+
+- Git commit + push. Vercel auto-deploys.
+- **Testable:** The site looks and feels like a real artisan herbal practice — warm, photographic, personal. Products have real images. Practitioners have real photos. Articles have compelling featured images. The design matches the spirit of hectorsherbs.com while being a modern, functional web application.
 
 ### Future Considerations
-- **Stripe Webhooks:** Listen for payment events (e.g., successful payment, refund) to update order status in real-time. Requires Milestone 8 database.
+- **Stripe Webhooks:** Listen for payment events (e.g., successful payment, refund) to update order status in real-time.
 - **Email Notifications:** Send booking confirmations and order receipts via email (e.g., Resend, SendGrid).
 - **Search:** Full-text search across products, articles, and practitioners.
 - **Analytics:** Track popular products, busiest practitioners, conversion rates.
+- **Blog CMS:** Richer article editor with markdown preview, image embedding, draft scheduling.
